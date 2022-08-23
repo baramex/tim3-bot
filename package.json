@@ -1,0 +1,25 @@
+{
+  "name": "tim3-bot",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/baramex/tim3-bot.git"
+  },
+  "author": "baramex",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/baramex/tim3-bot/issues"
+  },
+  "homepage": "https://github.com/baramex/tim3-bot#readme",
+  "dependencies": {
+    "discord.js": "^14.3.0",
+    "enmap": "^5.9.0",
+    "mongoose": "^6.5.2",
+    "node-schedule": "^2.1.0"
+  }
+}
