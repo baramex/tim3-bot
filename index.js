@@ -1,9 +1,27 @@
 const Discord = require("discord.js");
-const Enmap = require("enmap");
 const fs = require("fs");
+const Lowdb = require("lowdb");
+const FileSync = require("lowdb/adapters/FileSync");
 require("dotenv").config();
 require("./service/database").init();
 require("./service/schedule").init();
+
+const config = Lowdb(new FileSync(__dirname + "/config.json"));
+config.defaults({
+    channels: [
+        { event: "general", description: "Salon public de discussion générale.", types: [Discord.ChannelType.GuildText] }
+    ], roles: [
+        { type: "member", description: "Rôle membre." }
+    ]
+}).write();
+
+const COLORS = {
+    error: "FF0000",
+    info: "00F2FF",
+    warning: "ffc107",
+    valid: "00FF03",
+    casino: "FFD700"
+}
 
 const client = new Discord.Client({
     intents: [
@@ -15,12 +33,9 @@ const client = new Discord.Client({
     ]
 });
 /**
- * @type {Discord.Guild}
+ * @type {{guild:Discord.Guild,footer:Object}}
  */
-let guild;
-function setGuild(guild_) {
-    guild = guild_;
-}
+let options = { guild: undefined, footer: undefined };
 
 fs.readdir("./events/", (err, files) => {
     if (err) return console.error(err);
@@ -37,19 +52,6 @@ fs.readdir("./events/", (err, files) => {
     });
 });
 
-client.commands = new Enmap();
-
-fs.readdir("./commands/", (err, files) => {
-    if (err) return console.error(err);
-    files.forEach(file => {
-        if (!file.endsWith(".js")) return;
-        let props = require(`./commands/${file}`);
-        let commandName = file.split(".")[0];
-        console.log(`Attempting to load command ${commandName}`);
-        client.commands.set(commandName, props);
-    });
-});
-
 client.login(process.env.BOT_TOKEN);
 
-module.exports = { client, guild, setGuild };
+module.exports = { client, options, config, COLORS };
