@@ -1,5 +1,7 @@
 const { EmbedBuilder, CommandInteraction, ButtonBuilder, ActionRowBuilder, ChannelType, SelectMenuBuilder, ButtonStyle, Message, ApplicationCommandOptionType } = require("discord.js");
-const { config, COLORS, options } = require("..");
+const { COLORS, options } = require("..");
+const { updateBank } = require("../modules/bank");
+const { config } = require("../service/config");
 
 /**
  * 
@@ -212,6 +214,12 @@ module.exports.run = async (interaction) => {
                 }
 
                 let e = showAlls();
+
+                if (type == "channels") {
+                    switch (key) {
+                        case "banque": await updateBank().catch(console.error); break;
+                    }
+                }
 
                 await collected.update({ embeds: [e.embed], components: e.components });
 

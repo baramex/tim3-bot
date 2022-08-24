@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/baramex/tim3-bot#readme",
   "dependencies": {
+    "canvas": "^2.9.3",
     "discord.js": "^14.3.0",
     "enmap": "^5.9.0",
     "mongoose": "^6.5.2",

@@ -1,11 +1,11 @@
 const { Schema, model } = require("mongoose");
-const { guild } = require("..");
+const { options } = require("..");
 
 const userSchema = new Schema({
     id: { type: String, unique: true, required: true },
     lvl: { type: Number, default: 1, min: 1 },
     exp: { type: Number, default: 0, min: 0 },
-    coins: { type: Number, default: 0, min: 0 },
+    coins: { type: Number, default: 1000, min: 0 },
     date: { type: Date, default: new Date() }
 });
 
@@ -96,6 +96,39 @@ class User {
         user = await user.save();
 
         return level != user.lvl ? user.lvl : false;
+    }
+
+    static async totalMoney() {
+        const users = await UserModel.find({})
+
+        return users.reduce((acc, user) => {
+            return acc + user.coins;
+        }, 0);
+    }
+
+    static async top5() {
+        const users = await UserModel.find({}, { id: 1, coins: 1 }, { sort: { coins: -1 } });
+
+        return users.filter(({ id }) => options.guild.members.cache.has(id)).splice(0, 5);
+    }
+
+    static async getMoney(id) {
+        return (await UserModel.findOne({ id }, { coins: 1 })).coins;
+    }
+
+    static exists(id) {
+        return UserModel.exists({ id });
+    }
+
+    static async addCoins(id, coins) {
+        let user = await UserModel.findOne({ id });
+        if (!user) {
+            user = await User.create(id);
+        }
+        user.coins += coins;
+        await user.save();
+
+        return coins;
     }
 }
 
