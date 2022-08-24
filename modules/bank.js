@@ -23,7 +23,8 @@ async function updateBank() {
     const row = new ActionRowBuilder()
     .setComponents(
         new ButtonBuilder().setCustomId("bankrole").setEmoji("💰").setLabel("Solde").setStyle(ButtonStyle.Success),
-        new ButtonBuilder().setCustomId("work").setEmoji("📈").setLabel("Invest").setStyle(ButtonStyle.Primary)
+        new ButtonBuilder().setCustomId("work").setEmoji("📈").setLabel("Invest").setStyle(ButtonStyle.Primary),
+        new ButtonBuilder().setCustomId("shop").setEmoji("🛒").setLabel("Magasin").setStyle(ButtonStyle.Secondary)
     )
 
     const message = (await channel.messages.fetch()).find(m => m.author.id == client.user.id);

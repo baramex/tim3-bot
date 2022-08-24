@@ -1,8 +1,76 @@
-const { createCanvas } = require("canvas");
-const { EmbedBuilder, AttachmentBuilder } = require("discord.js");
-const { images, COLORS, options } = require("..");
+const { EmbedBuilder, ButtonBuilder, ActionRowBuilder, ButtonStyle, AttachmentBuilder } = require("discord.js");
+const { COLORS, options, images } = require("..");
 const User = require("../models/user.model");
-const { convertMonetary, durationTime } = require("../service/utils");
+const { convertMonetary } = require("../service/utils");
+const { createCanvas } = require("canvas");
+
+const items = [
+    {
+        icon: "https://cdn-icons-png.flaticon.com/512/567/567491.png",
+        name: "Demande de Dossier Staff :card_box:",
+        type: "divers",
+        price: 100_000,
+        description: "salut",
+        available: async (member) => {
+            return true;
+        },
+        reward: async (member) => {
+            // ticket
+        }
+    },
+    {
+        icon: "https://cdn-icons-png.flaticon.com/512/567/567491.png",
+        name: "Grade Perso Couleur :blue_circle:",
+        type: "role",
+        price: 500_000,
+        description: "salut",
+        available: async (member) => {
+            return true;
+        },
+        reward: async (member) => {
+            // modal -> color
+        }
+    },
+    {
+        icon: "https://cdn1.epicgames.com/salesEvent/salesEvent/EGS_Discord_Nitro_2560x1440_withlogo_2560x1440-944994658df3b04d0c4940be832da19e?h=270&resize=1&w=480",
+        name: "Nitro discord 1 mois",
+        type: "role",
+        price: 1_000_000,
+        description: "salut",
+        available: async (member) => {
+            return true;
+        },
+        reward: async (member) => {
+            // ticket
+        }
+    },
+    {
+        icon: "https://cdn1.epicgames.com/salesEvent/salesEvent/EGS_Discord_Nitro_2560x1440_withlogo_2560x1440-944994658df3b04d0c4940be832da19e?h=270&resize=1&w=480",
+        name: "Grade TimeLapse",
+        type: "role",
+        price: 500_000_000,
+        description: "salut",
+        available: async (member) => {
+            return true;
+        },
+        reward: async (member) => {
+            // donner role
+        }
+    },
+    {
+        icon: "https://cdn1.epicgames.com/salesEvent/salesEvent/EGS_Discord_Nitro_2560x1440_withlogo_2560x1440-944994658df3b04d0c4940be832da19e?h=270&resize=1&w=480",
+        name: "Grade TimeLess",
+        type: "role",
+        price: 1_000_000_000,
+        description: "salut",
+        available: async (member) => {
+            return true;
+        },
+        reward: async (member) => {
+            // donner role
+        }
+    }
+];
 
 let works = [];
 
@@ -14,7 +82,7 @@ module.exports = {
      * @returns 
      */
     run: async function (interaction) {
-        if (!interaction.isButton()) return;
+        if (!interaction.isButton()) return; if (!interaction.isButton()) return;
 
         if (interaction.customId == "bankrole") {
             const total = await User.totalMoney();
@@ -62,6 +130,106 @@ module.exports = {
             else {
                 await interaction.reply({ ephemeral: true, content: "Vous devez encore attendre **" + durationTime(work.end - Date.now()) + "**" });
             }
+        }
+        else if (interaction.customId == "shop") {
+            function generateEmbed(i) {
+                var item = items[i];
+                if (!item) throw new Error("Item non trouvé !");
+
+                var embed = new EmbedBuilder()
+                    .setColor(COLORS.casino)
+                    .setTitle(":hourglass_flowing_sand: | TIM€・shop")
+                    .setFooter(options.footer)
+                    .setDescription(item.name)
+                    .setFields([
+                        {
+                            name: "Type",
+                            value: item.type,
+                            inline: true
+                        },
+                        {
+                            name: "Prix",
+                            value: convertMonetary(item.price) + " :coin:",
+                            inline: true
+                        },
+                        {
+                            name: "Description",
+                            value: item.description
+                        }
+                    ])
+                    .setThumbnail(item.icon);
+
+                return embed;
+            }
+
+            async function generateNav(i) {
+                var item = items[i];
+                var ifp = items[i - 1] ? true : false;
+                var ifa = items[i + 1] ? true : false;
+
+                if (!item) throw new Error("Item non trouvé !");
+
+                var larrow = new ButtonBuilder()
+                    .setCustomId("left")
+                    .setDisabled(!ifp)
+                    .setEmoji("⬅️")
+                    .setLabel((i + 1) + "/" + items.length)
+                    .setStyle(ButtonStyle.Primary);
+
+                var buy = new ButtonBuilder()
+                    .setCustomId("buy")
+                    .setDisabled((await User.getMoney(interaction.member.id) >= item.price && await item.available(interaction.member)) ? false : true)
+                    .setEmoji("🛒")
+                    .setLabel("Acheter (" + convertMonetary(item.price) + ")")
+                    .setStyle(ButtonStyle.Success);
+
+                var rarrow = new ButtonBuilder()
+                    .setCustomId("right")
+                    .setDisabled(!ifa)
+                    .setEmoji("➡️")
+                    .setLabel((i + 1) + "/" + items.length)
+                    .setStyle(ButtonStyle.Primary);
+
+                return new ActionRowBuilder().setComponents(larrow, buy, rarrow);
+            }
+
+            var index = 0;
+            await interaction.reply({ embeds: [generateEmbed(index)], components: [await generateNav(index)], ephemeral: true });
+
+            var replied = await interaction.fetchReply();
+
+            var collector = replied.createMessageComponentCollector({ filter: int => int.isButton() && int.user.id == interaction.member.id, time: 1000 * 60 * 5 });
+            collector.on("collect", async collected => {
+                if (collected.customId == "left") {
+                    index--;
+                    collected.deferUpdate();
+                }
+                else if (collected.customId == "right") {
+                    index++;
+                    collected.deferUpdate();
+                }
+                else {
+                    var item = items[index];
+                    if (item) {
+                        if (!await item.available(interaction.member)) return collected.reply({ content: "Ce produit n'est pas disponible.", ephemeral: true })
+
+                        var c = await User.getMoney(interaction.member.id);
+                        if (item.price > c) return collected.reply({ content: "Vous n'avez pas assez d'argent (" + convertMonetary(c) + ").", ephemeral: true });
+
+                        await User.addCoins(interaction.member.id, -item.price);
+                        try {
+                            await item.reward(interaction.member);
+                            collected.reply({ content: "Item acheté avec succès !", ephemeral: true });
+                        } catch (error) {
+                            collected.reply({ content: "Une erreur inattendue s'est produite durant l'achat.", ephemeral: true });
+                        }
+                    }
+                }
+
+                await interaction.editReply({ embeds: [generateEmbed(index)], components: [await generateNav(index)], ephemeral: true });
+            }).on("end", (collected, reason) => {
+                if (reason == "time") interaction.editReply({ content: "Interaction terminée, 5 minutes écoulées", components: [] }).catch(console.error);
+            });
         }
     }
 };

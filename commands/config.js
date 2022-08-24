@@ -34,7 +34,7 @@ module.exports.run = async (interaction) => {
 
         let embed = new EmbedBuilder()
             .setColor(errors.length > 0 ? COLORS.warning : COLORS.valid)
-            .setTitle(":hourglass_flowing_sand: | TIM€・check")
+            .setTitle(":hourglass_flowing_sand: | TIM€・configuration")
             .setFooter(footer)
             .setDescription(errors.length > 0 ? `:warning: ${errors.length} problèmes ont été trouvés !` : ":white_check_mark: aucun problème trouvé !");
 
@@ -74,7 +74,7 @@ module.exports.run = async (interaction) => {
 
         let embed = new EmbedBuilder()
             .setColor(COLORS.info)
-            .setTitle(":hourglass_flowing_sand: | TIM€・" + type)
+            .setTitle(":hourglass_flowing_sand: | TIM€・configuration")
             .setFooter(footer)
             .setDescription(desc)
             .setFields(fields);
@@ -129,7 +129,7 @@ module.exports.run = async (interaction) => {
 
         let embed = new EmbedBuilder()
             .setColor(COLORS.info)
-            .setTitle(":hourglass_flowing_sand: | TIM€・" + type)
+            .setTitle(":hourglass_flowing_sand: | TIM€・configuration")
             .setFooter(footer)
             .setDescription(desc)
             .addFields([{ name: field[0], value: field[1] }]);
