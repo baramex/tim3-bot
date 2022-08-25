@@ -1,4 +1,4 @@
-const { client, COLORS, options } = require("..");
+const { client, COLORS, options } = require("../client");
 const { getChannel } = require("../service/config");
 const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require("discord.js");
 const User = require("../models/user.model");
@@ -13,10 +13,10 @@ async function updateBank() {
         .setTitle(":hourglass_flowing_sand: | TIM€・banque")
         .setFooter(options.footer)
         .setDescription(
-            `Il y a actuellement **${convertMonetary(await User.totalMoney())}** TSand sur le serveur.
+            `Il y a actuellement **${convertMonetary(await User.totalMoney())}** Limon Noir sur le serveur.
 
             Classement top 5:
-            ${(await User.top5()).map(({ id, coins }, i) => `${[":first_place:", ":second_place:", ":third_place:", ":medal:", ":military_medal:"][i]} \`${options.guild.members.cache.get(id).user.tag}\` | **${convertMonetary(coins)}** TSand`).join("\n")}
+            ${(await User.top5()).map(({ id, coins }, i) => `${[":first_place:", ":second_place:", ":third_place:", ":medal:", ":military_medal:"][i]} \`${options.guild.members.cache.get(id).user.tag}\` | **${convertMonetary(coins)}** Limon Noir`).join("\n")}
             `
         );
 
@@ -27,7 +27,7 @@ async function updateBank() {
         new ButtonBuilder().setCustomId("shop").setEmoji("🛒").setLabel("Magasin").setStyle(ButtonStyle.Secondary)
     )
 
-    const message = (await channel.messages.fetch()).find(m => m.author.id == client.user.id);
+    const message = (await channel.messages.fetch({ limit: 5 })).find(m => m.author.id == client.user.id);
     if (message) message.edit({ embeds: [embed], components: [row] });
     else channel.send({ embeds: [embed], components: [row] });
 }

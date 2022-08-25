@@ -1,8 +1,8 @@
 const { ActivityType } = require("discord.js");
 const Enmap = require("enmap");
-const { client, options } = require("..");
+const { client, options } = require("../client");
 const fs = require("fs");
-const { updateBank } = require("../modules/bank");
+const { fastUpdate } = require("../service/update");
 
 module.exports = {
     name: "ready",
@@ -41,10 +41,6 @@ module.exports = {
             });
         });
 
-        try {
-            await updateBank();
-        } catch (error) {
-            console.error(error);
-        }
+        await fastUpdate();
     }
 }

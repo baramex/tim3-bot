@@ -1,5 +1,5 @@
 const { Schema, model } = require("mongoose");
-const { options } = require("..");
+const { options } = require("../client");
 
 const userSchema = new Schema({
     id: { type: String, unique: true, required: true },

@@ -1,8 +1,10 @@
 const { EmbedBuilder, ButtonBuilder, ActionRowBuilder, ButtonStyle, AttachmentBuilder } = require("discord.js");
-const { COLORS, options, images } = require("..");
+const { COLORS, options } = require("../client");
 const User = require("../models/user.model");
 const { convertMonetary } = require("../service/utils");
 const { createCanvas } = require("canvas");
+const { getRole } = require("../service/config");
+const { images } = require("..");
 
 const items = [
     {
@@ -10,20 +12,27 @@ const items = [
         name: "Demande de Dossier Staff :card_box:",
         type: "divers",
         price: 100_000,
-        description: "salut",
+        description: "Le dossier staff permet de proposer sa candidature et d'avoir une chance d'intégrer l'équipe de modération du serveur TIM€.",
         available: async (member) => {
+            let role = getRole("dossier-staff");
+            if (!role) return false;
+            if (member.roles.cache.has(role.id)) return false;
+
             return true;
         },
         reward: async (member) => {
-            // ticket
+            let role = getRole("dossier-staff");
+            if (!role) return;
+
+            member.roles.add(role);
         }
     },
     {
-        icon: "https://cdn-icons-png.flaticon.com/512/567/567491.png",
+        icon: "https://www.e-monsite.com/medias/images/newsletter-02-1-.png",
         name: "Grade Perso Couleur :blue_circle:",
         type: "role",
         price: 500_000,
-        description: "salut",
+        description: "Le rôle personnalisé vous permet de changer la couleur de votre pseudo pour visuellement vous identifier.",
         available: async (member) => {
             return true;
         },
@@ -34,9 +43,9 @@ const items = [
     {
         icon: "https://cdn1.epicgames.com/salesEvent/salesEvent/EGS_Discord_Nitro_2560x1440_withlogo_2560x1440-944994658df3b04d0c4940be832da19e?h=270&resize=1&w=480",
         name: "Nitro discord 1 mois",
-        type: "role",
+        type: "divers",
         price: 1_000_000,
-        description: "salut",
+        description: "Rien à dire de plus, un nitro discord d'une durée de 1 mois offert.",
         available: async (member) => {
             return true;
         },
@@ -49,12 +58,19 @@ const items = [
         name: "Grade TimeLapse",
         type: "role",
         price: 500_000_000,
-        description: "salut",
+        description: "Le grade TimeLapse vous est offert (voir salon nous-soutenir), sa valeur de base est 10€.",
         available: async (member) => {
+            let role = getRole("grade-timelapse");
+            if (!role) return false;
+            if (member.roles.cache.has(role.id)) return false;
+
             return true;
         },
         reward: async (member) => {
-            // donner role
+            let role = getRole("grade-timelapse");
+            if (!role) return;
+
+            member.roles.add(role);
         }
     },
     {
@@ -62,12 +78,19 @@ const items = [
         name: "Grade TimeLess",
         type: "role",
         price: 1_000_000_000,
-        description: "salut",
+        description: "Le grade TimeLess vous est offert (voir salon nous-soutenir), sa valeur de base est 20€.",
         available: async (member) => {
+            let role = getRole("grade-timeless");
+            if (!role) return false;
+            if (member.roles.cache.has(role.id)) return false;
+
             return true;
         },
         reward: async (member) => {
-            // donner role
+            let role = getRole("grade-timeless");
+            if (!role) return;
+
+            member.roles.add(role);
         }
     }
 ];
@@ -102,13 +125,13 @@ module.exports = {
             ctx.textBaseline = "bottom";
             ctx.textAlign = "center";
             ctx.font = "30px OpenSans";
-            ctx.fillText(`${convertMonetary(money)} TSand`, canvas.width / 2, canvas.height - 8);
+            ctx.fillText(`${convertMonetary(money)} Limon Noir`, canvas.width / 2, canvas.height - 8);
 
             const embed = new EmbedBuilder()
                 .setColor(COLORS.casino)
                 .setTitle(":hourglass_flowing_sand: | TIM€・solde")
                 .setFooter(options.footer)
-                .setDescription("Vous avez **" + convertMonetary(money) + "** TSand.")
+                .setDescription("Vous avez **" + convertMonetary(money) + "** Limon Noir.")
                 .setImage("attachment://bank.png");
 
             await interaction.reply({ embeds: [embed], ephemeral: true, files: [new AttachmentBuilder(canvas.toBuffer("image/png"), { name: "bank.png" })] });
@@ -125,7 +148,7 @@ module.exports = {
 
                 User.addCoins(interaction.member.id, 3000);
 
-                await interaction.reply({ ephemeral: true, content: "Vous avez récupéré **3000** TSand, revenez dans **4 heures** pour récupérer vos nouveaux gains." });
+                await interaction.reply({ ephemeral: true, content: "Vous avez récupéré **3000** Limon Noir, revenez dans **4 heures** pour récupérer vos nouveaux gains." });
             }
             else {
                 await interaction.reply({ ephemeral: true, content: "Vous devez encore attendre **" + durationTime(work.end - Date.now()) + "**" });

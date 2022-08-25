@@ -1,5 +1,5 @@
-const { VoiceState } = require("discord.js");
-const { guild } = require("..");
+const { VoiceState, VoiceChannel } = require("discord.js");
+const { guild } = require("../client");
 const User = require("../models/user.model");
 
 const voice = [];
@@ -14,7 +14,7 @@ module.exports = {
      */
     run: async function (oldState, newState) {
         if (oldState.member.bot) return;
-        
+
         let channel = newState.channel;
         let afk = guild.afkChannelId;
 
@@ -23,19 +23,28 @@ module.exports = {
         }
 
         if ((!channel || channel.id == afk) && oldState.channel && oldState.channelId != afk) {
-            await endVoice(newState.member.id);
+            await endVoice(newState.member.id, oldState.channel);
         }
     }
 }
 
-async function endVoice(id) {
+/**
+ * 
+ * @param {String} id 
+ * @param {VoiceChannel} channel 
+ */
+async function endVoice(id, channel) {
     var v = voice.find(a => a.id == id);
     if (v) {
         voice.splice(voice.indexOf(v), 1);
 
         var duration = new Date().getTime() - v.time;
 
-        await User.addExp(id, Math.floor(duration / 1000 / 60 * 50));
+        const levelup = await User.addExp(id, Math.floor(duration / 1000 / 60 * 50));
+        if (levelup) {
+            channel.send(`<@${id}>, :clap: Vous prenez le temps d'obtenir un niveau supérieur: **${levelup}** :hourglass_flowing_sand: !`);
+        }
+
         await User.addCoins(id, Math.floor(duration / 1000 / 60 * 100));
     }
 }

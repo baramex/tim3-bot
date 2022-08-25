@@ -16,28 +16,28 @@ module.exports.run = async (interaction) => {
     let member = interaction.options.getMember("membre");
     let coins = interaction.options.get("coins", true);
 
-    if (coins.value <= 0) throw new Error("Nombre de TSand invalide !");
+    if (coins.value <= 0) throw new Error("Nombre de Limon Noir invalide !");
     if (!member || member.user.bot) throw new Error("Membre invalide !");
 
     await User.addCoins(member.id, coins.value);
 
-    interaction.reply("**" + member.user.tag + "** a bien reçu **" + coins.value + "** TSand.");
+    interaction.reply("**" + member.user.tag + "** a bien reçu **" + coins.value + "** Limon Noir.");
 };
 
 module.exports.info = {
     name: "ajotuer-coins",
-    description: "permet d'ajouter des TSand à un membre.",
+    description: "permet d'ajouter des Limon Noir à un membre.",
     category: "mod",
     options: [
         {
             name: "membre",
-            description: "le membre à qui ajouter les TSand.",
+            description: "le membre à qui ajouter les Limon Noir.",
             type: ApplicationCommandOptionType.User,
             required: true
         },
         {
             name: "coins",
-            description: "le nombre de TSand à ajouter.",
+            description: "le nombre de Limon Noir à ajouter.",
             type: ApplicationCommandOptionType.Integer,
             required: true
         }
