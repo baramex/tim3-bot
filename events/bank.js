@@ -1,4 +1,4 @@
-const { EmbedBuilder, ButtonBuilder, ActionRowBuilder, ButtonStyle, AttachmentBuilder } = require("discord.js");
+const { EmbedBuilder, ButtonBuilder, ActionRowBuilder, ButtonStyle, AttachmentBuilder, ModalBuilder, TextInputBuilder, TextInputStyle, Colors } = require("discord.js");
 const { COLORS, options } = require("../client");
 const User = require("../models/user.model");
 const { convertMonetary, durationTime } = require("../service/utils");
@@ -25,9 +25,10 @@ const items = [
         },
         reward: async (member) => {
             let role = getRole("dossier-staff");
-            if (!role) return;
+            if (!role) throw new Error();
 
-            member.roles.add(role);
+            await member.roles.add(role);
+            return () => { };
         }
     },
     {
@@ -36,11 +37,52 @@ const items = [
         type: "Role",
         price: 50_000_000,
         description: "Le rôle personnalisé vous permet de changer la couleur de votre pseudo pour visuellement vous identifier.",
-        available: async () => {
+        available: async (member) => {
+            if (!getRole("membre")) return false;
+            if (member.roles.cache.some(a => a.name.startsWith("🎨・"))) return false;
             return true;
         },
-        reward: async (member) => {
-            // modal -> color
+        reward: async (member, interaction) => {
+            let role = getRole("membre");
+            if (!role) throw new Error();
+
+            let id = Date.now() + "-role-perso";
+            const modal = new ModalBuilder().setCustomId(id).setTitle("Customisation de Rôle").setComponents(
+                new ActionRowBuilder().addComponents(
+                    new TextInputBuilder().setCustomId("name").setLabel("Nom du rôle").setMinLength(1).setMaxLength(30).setRequired(true).setPlaceholder("Je suis le meilleur").setStyle(TextInputStyle.Short)),
+                new ActionRowBuilder().addComponents(
+                    new TextInputBuilder().setCustomId("color").setLabel("Couleur du rôle (hex ou nom)").setMinLength(1).setMaxLength(20).setRequired(true).setStyle(TextInputStyle.Short).setPlaceholder("red, #ff0000, etc..."),
+                ));
+
+            interaction.showModal(modal);
+            const submit = await interaction.awaitModalSubmit({ time: 1000 * 60 * 5, filter: (m) => m.customId === id });
+            const name = submit.fields.getField("name").value;
+            let color = submit.fields.getField("color").value;
+
+            let c = Object.entries(Colors).map(col => [col[0].toLowerCase(), col[1]]).find(a => a[0] === color.replace(" ", "").toLowerCase());
+            if (c) color = c[1];
+            else {
+                if (color.startsWith("#")) color = color.substring(1);
+
+                let valid = false;
+                switch (color.length) {
+                    case 3: valid = /^[0-9A-F]{3}$/i.test(color); break;
+                    case 6: valid = /^[0-9A-F]{6}$/i.test(color); break;
+                    case 8: valid = /^[0-9A-F]{8}$/i.test(color); break;
+                }
+
+                if (!valid) {
+                    submit.reply({ content: "La couleur est invalide.", ephemeral: true });
+                    throw new Error();
+                }
+
+                color = parseInt(color, 16);
+            }
+
+            const newRole = await options.guild.roles.create({ name: "🎨・" + name, position: role.position + 1, color });
+
+            await member.roles.add(newRole);
+            return () => { submit.reply({ content: "Rôle " + newRole.toString() + " ajouté !", ephemeral: true }) };
         }
     },
     {
@@ -54,7 +96,7 @@ const items = [
         },
         reward: async (member, interaction) => {
             const cha = await createReport(member, "Achat Nitro Discord 1 Mois OU 5€", interaction, true);
-            await cha.send({ content: ":medal: Achat à **__250'000'000__** Limon Noir confirmé :white_check_mark:" });
+            return () => cha.send({ content: ":medal: Achat à **__250'000'000__** Limon Noir confirmé :white_check_mark:" });
         }
     },
     {
@@ -72,9 +114,10 @@ const items = [
         },
         reward: async (member) => {
             let role = getRole("grade-timelapse");
-            if (!role) return;
+            if (!role) throw new Error();
 
-            member.roles.add(role);
+            await member.roles.add(role);
+            return () => { };
         }
     },
     {
@@ -92,9 +135,10 @@ const items = [
         },
         reward: async (member) => {
             let role = getRole("grade-timeless");
-            if (!role) return;
+            if (!role) throw new Error();
 
-            member.roles.add(role);
+            await member.roles.add(role);
+            return () => { };
         }
     }
 ];
@@ -243,9 +287,10 @@ module.exports = {
                         var c = await User.getMoney(interaction.member.id);
                         if (item.price > c) return collected.reply({ content: "Vous n'avez pas assez d'argent (" + convertMonetary(c) + ").", ephemeral: true });
 
-                        await User.addCoins(interaction.member.id, -item.price);
                         try {
-                            await item.reward(interaction.member, collected);
+                            let func = await item.reward(interaction.member, collected);
+                            await User.addCoins(interaction.member.id, -item.price);
+                            await func();
                             if (!collected.replied) collected.reply({ content: "Item acheté avec succès !", ephemeral: true });
                         } catch (error) {
                             console.error("buy item", error);

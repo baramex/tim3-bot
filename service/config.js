@@ -14,7 +14,7 @@ config.defaults({
         { event: "tickets-parent", description: "Catégorie privée où seront disposées les tickets.", types: [ChannelType.GuildCategory] },
         { event: "archives-tickets-parent", description: "Catégorie privée où seront disposées les tickets archivés.", types: [ChannelType.GuildCategory] }
     ], roles: [
-        { type: "member", description: "Rôle membre." },
+        { type: "membre", description: "Rôle membre." },
         { type: "dossier-staff", description: "Rôle attribué aux membres qui achètent l'article Demande de Dossier Staff." },
         { type: "grade-timelapse", description: "Grade TimeLapse." },
         { type: "grade-timeless", description: "Grade TimeLess." },
