@@ -1,4 +1,4 @@
-const { ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder, SelectMenuBuilder, ChannelType } = require("discord.js");
+const { ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder, SelectMenuBuilder, ChannelType, TextChannel, GuildMember, Interaction, Message, MessageType } = require("discord.js");
 const { options, COLORS, client } = require("../client");
 const { getChannel, config } = require("../service/config");
 
@@ -25,12 +25,12 @@ async function deleteReport(interaction, definitely = false) {
 
 /**
  * 
- * @param {Discord.GuildMember} member 
+ * @param {GuildMember} member 
  * @param {string} type 
- * @param {Discord.ModalSubmitInteraction} interaction 
- * @returns 
+ * @param {Interaction} interaction 
+ * @returns {Promise<TextChannel>}
  */
-async function createReport(member, type, interaction) {
+async function createReport(member, type, interaction, forceSize = false) {
     var c = getChannel("tickets-parent");
     if (!c) return;
 
@@ -38,35 +38,36 @@ async function createReport(member, type, interaction) {
     var channels = options.guild.channels.cache.filter(a => a.parentId == c.id);
     if (channels.size > 0) {
         var memberChannels = channels.filter(a => a.name.split("-")[1] == member.id);
-        if (memberChannels.size >= 2) {
-            return interaction.reply({ content: ":x: Vous ne pouvez pas créer plus que 5 tickets !", ephemeral: true });
+        if (memberChannels.size >= 2 && !forceSize) {
+            return interaction.reply({ content: ":x: Vous ne pouvez pas créer plus de 2 tickets !", ephemeral: true });
         }
 
         n = Number(channels.sort((a, b) => Number(b.name.split("-")[0]) - Number(a.name.split("-")[0])).first().name.split("-")[0]) + 1;
     }
 
-    options.guild.channels.create({ name: n.toString().padStart(3, "0") + "-" + member.id, type: ChannelType.GuildText, parent: c }).then(async cha => {
-        await cha.lockPermissions().catch(console.error);
-        await cha.permissionOverwrites.create(member, { ViewChannel: true });
-        cha.send({
-            embeds: [new EmbedBuilder().setColor(COLORS.info)
-                .setTitle(":hourglass_flowing_sand: | TIM€・Ticket")
-                .setFooter(options.footer)
-                .addFields([{ name: "Index", value: n.toString().padStart(3, "0") || "erreur", inline: true },
-                { name: "Membre", value: "<@" + member.id + ">", inline: true },
-                { name: "Type", value: type || "sans type", inline: true }
-                ])
-                .setThumbnail(member.user.displayAvatarURL())
-            ],
-            components: [new ActionRowBuilder().addComponents(new ButtonBuilder().setCustomId('archive_ticket')
-                .setLabel('Archiver le ticket')
-                .setStyle(ButtonStyle.Danger)
-                .setEmoji("🕒"))]
-        }).catch(console.error);
+    const cha = await options.guild.channels.create({ name: n.toString().padStart(3, "0") + "-" + member.id, type: ChannelType.GuildText, parent: c })
+    await cha.lockPermissions().catch(console.error);
+    await cha.permissionOverwrites.create(member, { ViewChannel: true });
+    await cha.send({
+        embeds: [new EmbedBuilder().setColor(COLORS.info)
+            .setTitle(":hourglass_flowing_sand: | TIM€・Ticket")
+            .setFooter(options.footer)
+            .addFields([{ name: "Index", value: n.toString().padStart(3, "0") || "erreur", inline: true },
+            { name: "Membre", value: "<@" + member.id + ">", inline: true },
+            { name: "Type", value: type || "sans type", inline: true }
+            ])
+            .setThumbnail(member.user.displayAvatarURL())
+        ],
+        components: [new ActionRowBuilder().addComponents(new ButtonBuilder().setCustomId('archive_ticket')
+            .setLabel('Archiver le ticket')
+            .setStyle(ButtonStyle.Danger)
+            .setEmoji("🕒"))]
+    });
 
-        interaction.reply({ content: ":white_check_mark: Ticket créé <#" + cha.id + "> !", ephemeral: true }).catch(console.error);
-        interaction.message.edit();
-    }).catch(console.error);
+    await interaction.reply({ content: ":white_check_mark: Ticket créé <#" + cha.id + "> !", ephemeral: true }).catch(console.error);
+    if (interaction.message && interaction.message.type === MessageType.Default) await interaction.message.edit({}).catch(console.error);
+
+    return cha;
 }
 
 async function updateTicket() {
