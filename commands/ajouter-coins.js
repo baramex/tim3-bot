@@ -25,7 +25,7 @@ module.exports.run = async (interaction) => {
 };
 
 module.exports.info = {
-    name: "ajotuer-coins",
+    name: "ajouter-coins",
     description: "permet d'ajouter des Limon Noir à un membre.",
     category: "mod",
     options: [

@@ -7,10 +7,10 @@ require("./service/database").init();
 require("./service/schedule").init();
 
 let images = {};
-fs.readdir("./images/", (err, files) => {
+fs.readdir("./ressources/images/", (err, files) => {
     if (err) return console.error(err);
     files.forEach(async file => {
-        images[file.split(".")[0]] = await loadImage("./images/" + file);
+        images[file.split(".")[0]] = await loadImage("./ressources/images/" + file);
     });
 });
 

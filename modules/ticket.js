@@ -50,7 +50,7 @@ async function createReport(member, type, interaction) {
         await cha.permissionOverwrites.create(member, { ViewChannel: true });
         cha.send({
             embeds: [new EmbedBuilder().setColor(COLORS.info)
-                .setTitle(":hourglass_flowing_sand: | TIM€・ticket")
+                .setTitle(":hourglass_flowing_sand: | TIM€・Ticket")
                 .setFooter(options.footer)
                 .addFields([{ name: "Index", value: n.toString().padStart(3, "0") || "erreur", inline: true },
                 { name: "Membre", value: "<@" + member.id + ">", inline: true },
@@ -75,7 +75,7 @@ async function updateTicket() {
 
     const embed = new EmbedBuilder()
         .setColor(COLORS.info)
-        .setTitle(":hourglass_flowing_sand: | TIM€・ouvrir un ticket")
+        .setTitle(":hourglass_flowing_sand: | TIM€・Ouvrir Un Ticket")
         .setFooter(options.footer)
         .setDescription(":warning: Avez-vous un problème ? Ou voulez-vous nous demander quelque chose ?\nTout abus sera sanctionné.");
 

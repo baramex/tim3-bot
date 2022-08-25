@@ -10,13 +10,13 @@ async function updateBank() {
 
     const embed = new EmbedBuilder()
         .setColor(COLORS.casino)
-        .setTitle(":hourglass_flowing_sand: | TIM€・banque")
+        .setTitle(":hourglass_flowing_sand: | TIM€・Banque")
         .setFooter(options.footer)
         .setDescription(
             `Il y a actuellement **${convertMonetary(await User.totalMoney())}** Limon Noir sur le serveur.
 
-            Classement top 5:
-            ${(await User.top5()).map(({ id, coins }, i) => `${[":first_place:", ":second_place:", ":third_place:", ":medal:", ":military_medal:"][i]} \`${options.guild.members.cache.get(id).user.tag}\` | **${convertMonetary(coins)}** Limon Noir`).join("\n")}
+            Classement top 50:
+            ${(await User.top50()).map(({ id, coins }, i) => `${[":first_place:", ":second_place:", ":third_place:", ":medal:", ":military_medal:"][i]} \`${options.guild.members.cache.get(id).user.tag}\` | **${convertMonetary(coins)}** Limon Noir`).join("\n")}
             `
         );
 

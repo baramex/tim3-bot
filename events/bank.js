@@ -2,15 +2,17 @@ const { EmbedBuilder, ButtonBuilder, ActionRowBuilder, ButtonStyle, AttachmentBu
 const { COLORS, options } = require("../client");
 const User = require("../models/user.model");
 const { convertMonetary } = require("../service/utils");
-const { createCanvas } = require("canvas");
+const { createCanvas, registerFont } = require("canvas");
 const { getRole } = require("../service/config");
 const { images } = require("..");
+
+registerFont("./ressources/fonts/Neoneon.otf", { family: "Neoneon" });
 
 const items = [
     {
         icon: "https://cdn-icons-png.flaticon.com/512/567/567491.png",
         name: "Demande de Dossier Staff :card_box:",
-        type: "divers",
+        type: "Divers",
         price: 100_000,
         description: "Le dossier staff permet de proposer sa candidature et d'avoir une chance d'intégrer l'équipe de modération du serveur TIM€.",
         available: async (member) => {
@@ -30,7 +32,7 @@ const items = [
     {
         icon: "https://www.e-monsite.com/medias/images/newsletter-02-1-.png",
         name: "Grade Perso Couleur :blue_circle:",
-        type: "role",
+        type: "Role",
         price: 500_000,
         description: "Le rôle personnalisé vous permet de changer la couleur de votre pseudo pour visuellement vous identifier.",
         available: async (member) => {
@@ -42,9 +44,9 @@ const items = [
     },
     {
         icon: "https://cdn1.epicgames.com/salesEvent/salesEvent/EGS_Discord_Nitro_2560x1440_withlogo_2560x1440-944994658df3b04d0c4940be832da19e?h=270&resize=1&w=480",
-        name: "Nitro discord 1 mois",
-        type: "divers",
-        price: 1_000_000,
+        name: "Nitro Discord 1 Mois",
+        type: "Divers",
+        price: 250_000_000,
         description: "Rien à dire de plus, un nitro discord d'une durée de 1 mois offert.",
         available: async (member) => {
             return true;
@@ -56,7 +58,7 @@ const items = [
     {
         icon: "https://cdn1.epicgames.com/salesEvent/salesEvent/EGS_Discord_Nitro_2560x1440_withlogo_2560x1440-944994658df3b04d0c4940be832da19e?h=270&resize=1&w=480",
         name: "Grade TimeLapse",
-        type: "role",
+        type: "Role",
         price: 500_000_000,
         description: "Le grade TimeLapse vous est offert (voir salon nous-soutenir), sa valeur de base est 10€.",
         available: async (member) => {
@@ -76,7 +78,7 @@ const items = [
     {
         icon: "https://cdn1.epicgames.com/salesEvent/salesEvent/EGS_Discord_Nitro_2560x1440_withlogo_2560x1440-944994658df3b04d0c4940be832da19e?h=270&resize=1&w=480",
         name: "Grade TimeLess",
-        type: "role",
+        type: "Role",
         price: 1_000_000_000,
         description: "Le grade TimeLess vous est offert (voir salon nous-soutenir), sa valeur de base est 20€.",
         available: async (member) => {
@@ -121,15 +123,15 @@ module.exports = {
             ctx.drawImage(images.hourglass1, 0, 0, width, height, 0, 0, canvas.width, canvas.height);
             ctx.drawImage(images.hourglass2, 0, height * (1 - pct), width, height * pct, 0, canvas.height * (1 - pct), canvas.width, canvas.height * pct);
 
-            ctx.fillStyle = "#FFAC33";
+            ctx.fillStyle = "#B20000";
             ctx.textBaseline = "bottom";
             ctx.textAlign = "center";
-            ctx.font = "30px OpenSans";
-            ctx.fillText(`${convertMonetary(money)} Limon Noir`, canvas.width / 2, canvas.height - 8);
+            ctx.font = "30px Neoneon";
+            ctx.fillText(convertMonetary(money), canvas.width / 2, canvas.height - 8);
 
             const embed = new EmbedBuilder()
                 .setColor(COLORS.casino)
-                .setTitle(":hourglass_flowing_sand: | TIM€・solde")
+                .setTitle(":hourglass_flowing_sand: | TIM€・Solde")
                 .setFooter(options.footer)
                 .setDescription("Vous avez **" + convertMonetary(money) + "** Limon Noir.")
                 .setImage("attachment://bank.png");
@@ -161,7 +163,7 @@ module.exports = {
 
                 var embed = new EmbedBuilder()
                     .setColor(COLORS.casino)
-                    .setTitle(":hourglass_flowing_sand: | TIM€・shop")
+                    .setTitle(":hourglass_flowing_sand: | TIM€・Shop")
                     .setFooter(options.footer)
                     .setDescription(item.name)
                     .setFields([

@@ -106,10 +106,10 @@ class User {
         }, 0);
     }
 
-    static async top5() {
+    static async top50() {
         const users = await UserModel.find({}, { id: 1, coins: 1 }, { sort: { coins: -1 } });
 
-        return users.filter(({ id }) => options.guild.members.cache.has(id)).splice(0, 5);
+        return users.filter(({ id }) => options.guild.members.cache.has(id)).splice(0, 50);
     }
 
     static async getMoney(id) {
