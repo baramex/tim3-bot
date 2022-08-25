@@ -1,7 +1,7 @@
 const { EmbedBuilder, ButtonBuilder, ActionRowBuilder, ButtonStyle, AttachmentBuilder } = require("discord.js");
 const { COLORS, options } = require("../client");
 const User = require("../models/user.model");
-const { convertMonetary } = require("../service/utils");
+const { convertMonetary, durationTime } = require("../service/utils");
 const { createCanvas, registerFont } = require("canvas");
 const { getRole } = require("../service/config");
 const { images } = require("..");
@@ -13,7 +13,7 @@ const items = [
         icon: "https://cdn-icons-png.flaticon.com/512/567/567491.png",
         name: "Demande de Dossier Staff :card_box:",
         type: "Divers",
-        price: 100_000,
+        price: 1_000_000,
         description: "Le dossier staff permet de proposer sa candidature et d'avoir une chance d'intégrer l'équipe de modération du serveur TIM€.",
         available: async (member) => {
             let role = getRole("dossier-staff");
@@ -33,7 +33,7 @@ const items = [
         icon: "https://www.e-monsite.com/medias/images/newsletter-02-1-.png",
         name: "Grade Perso Couleur :blue_circle:",
         type: "Role",
-        price: 500_000,
+        price: 50_000_000,
         description: "Le rôle personnalisé vous permet de changer la couleur de votre pseudo pour visuellement vous identifier.",
         available: async (member) => {
             return true;
@@ -43,7 +43,7 @@ const items = [
         }
     },
     {
-        icon: "https://cdn1.epicgames.com/salesEvent/salesEvent/EGS_Discord_Nitro_2560x1440_withlogo_2560x1440-944994658df3b04d0c4940be832da19e?h=270&resize=1&w=480",
+        icon: "https://cdn1.epicgames.com/salesEvent/salesEvent/EGS_Discord_Nitro_2560x1440_withlogo_2560x1440-944994658df3b04d0c4940be832da19e",
         name: "Nitro Discord 1 Mois",
         type: "Divers",
         price: 250_000_000,
@@ -56,7 +56,7 @@ const items = [
         }
     },
     {
-        icon: "https://cdn1.epicgames.com/salesEvent/salesEvent/EGS_Discord_Nitro_2560x1440_withlogo_2560x1440-944994658df3b04d0c4940be832da19e?h=270&resize=1&w=480",
+        icon: "https://images-ext-2.discordapp.net/external/4NMWSyMkPSXdNjgoWvfW9gNldf3txTalLSV7X77BAv8/https/les-raccourcis-clavier.fr/wp-content/uploads/2019/03/Emoji-foudre.png",
         name: "Grade TimeLapse",
         type: "Role",
         price: 500_000_000,
@@ -76,7 +76,7 @@ const items = [
         }
     },
     {
-        icon: "https://cdn1.epicgames.com/salesEvent/salesEvent/EGS_Discord_Nitro_2560x1440_withlogo_2560x1440-944994658df3b04d0c4940be832da19e?h=270&resize=1&w=480",
+        icon: "https://images-ext-1.discordapp.net/external/vaHQfFeRtHct2a9WdsgnyxqC4mbWMULOX6ulv9LJIDU/https/cdn-0.emojis.wiki/emoji-pics/microsoft/hourglass-done-microsoft.png",
         name: "Grade TimeLess",
         type: "Role",
         price: 1_000_000_000,
@@ -107,7 +107,7 @@ module.exports = {
      * @returns 
      */
     run: async function (interaction) {
-        if (!interaction.isButton()) return; if (!interaction.isButton()) return;
+        if (!interaction.isButton()) return;
 
         if (interaction.customId == "bankrole") {
             const total = await User.totalMoney();

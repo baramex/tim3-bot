@@ -1,5 +1,6 @@
 const { options } = require("../client");
 const { updateBank } = require("../modules/bank");
+const { updateLevel } = require("../modules/level");
 const { updateTicket } = require("../modules/ticket");
 const { config } = require("./config");
 
@@ -13,6 +14,7 @@ async function fastUpdate() {
 
         await updateBank();
         await updateTicket();
+        await updateLevel();
     } catch (error) {
         console.error(error);
     }

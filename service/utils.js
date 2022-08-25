@@ -24,4 +24,23 @@ function durationTime(ms) {
     return ((y ? (y + " années ") : "") + (m ? m + " mois " : "") + (d ? d + " jours " : "") + (h ? h + " heures " : "") + (min ? min + " minutes " : "")).trim() || "0 minutes";
 }
 
-module.exports = { convertMonetary, durationTime };
+/**
+ * 
+ * @param {Number} number 
+ * @returns 
+ */
+function reduce(number) {
+    var scales = ["k", "m"];
+    var vals = [1000, 1000000];
+    var str = number;
+    scales.forEach((scale, i) => {
+        var res = (number / vals[i]).toFixed(1);
+        if (res >= 1) {
+            str = res + " " + scale;
+        }
+        else return;
+    });
+    return str;
+}
+
+module.exports = { convertMonetary, durationTime, reduce };

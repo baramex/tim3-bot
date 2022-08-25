@@ -1,5 +1,5 @@
 const { VoiceState, VoiceChannel } = require("discord.js");
-const { guild } = require("../client");
+const { options } = require("../client");
 const User = require("../models/user.model");
 
 const voice = [];
@@ -16,7 +16,7 @@ module.exports = {
         if (oldState.member.bot) return;
 
         let channel = newState.channel;
-        let afk = guild.afkChannelId;
+        let afk = options.guild.afkChannelId;
 
         if ((!oldState.channel || oldState.channelId == afk) && channel && channel.id != afk) {
             if (!voice.find(a => a.id == newState.member.id)) voice.push({ id: newState.member.id, time: new Date().getTime() });
@@ -40,9 +40,11 @@ async function endVoice(id, channel) {
 
         var duration = new Date().getTime() - v.time;
 
-        const levelup = await User.addExp(id, Math.floor(duration / 1000 / 60 * 50));
+        const levelup = await User.addExp(id, Math.floor(duration / 1000 / 60 / 60 * 1000));
         if (levelup) {
-            channel.send(`<@${id}>, :clap: Vous prenez le temps d'obtenir un niveau supérieur: **${levelup}** :hourglass_flowing_sand: !`);
+            message.reply(levelup.passed == 1 ?
+                `<@${id}>, :clap: Vous prenez le temps d'obtenir un niveau supérieur: **${levelup.lvl}** et vous obtenez **${levelup.reward}** Limon Noir :hourglass_flowing_sand: !` :
+                `<@${id}>, :clap: Vous prenez le temps d'obtenir **${levelup.passed}** niveaux supérieurs: **${levelup.lvl}** et vous obtenez **${levelup.reward}** Limon Noir :hourglass_flowing_sand: !`);
         }
 
         await User.addCoins(id, Math.floor(duration / 1000 / 60 * 100));

@@ -1,6 +1,7 @@
 const { EmbedBuilder, CommandInteraction, ButtonBuilder, ActionRowBuilder, ChannelType, SelectMenuBuilder, ButtonStyle, Message, ApplicationCommandOptionType, ModalBuilder, TextInputBuilder, TextInputStyle } = require("discord.js");
 const { COLORS, options } = require("../client");
 const { updateBank } = require("../modules/bank");
+const { updateLevel } = require("../modules/level");
 const { updateTicket } = require("../modules/ticket");
 const { config } = require("../service/config");
 
@@ -232,6 +233,7 @@ module.exports.run = async (interaction) => {
                     switch (key) {
                         case "banque": await updateBank().catch(console.error); break;
                         case "tickets": await updateTicket().catch(console.error); break;
+                        case "niveau": await updateLevel().catch(console.error); break;
                     }
                 }
 

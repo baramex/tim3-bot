@@ -23,10 +23,16 @@ userSchema.pre("save", async function (next) {
 
     if (newLvl <= 0) return next("Niveau négatif");
 
+    if (newLvl > 1000) {
+        this.exp = User.getMaxExp() - 1;
+        return next();
+    }
+
     if (newLvl != lvl) {
         // level up
-        this.exp = User.getExp(exp, lvl);
+        this.exp = User.getExp(exp);
         this.lvl = newLvl;
+        this.coins += User.getReward(lvl, newLvl);
     }
 
     next();
@@ -44,26 +50,17 @@ class User {
         return user.save();
     }
 
-    /**
-     * 
-     * @param {number} level
-     */
-    static getMaxExp(level) {
-        return ((level * 100 + level * 30) * (Math.round(level / 5) + 1));
+    static getMaxExp() {
+        return 1000;
     }
 
     /**
      * 
-     * @param {Number} exp 
-     * @param {Number} level 
+     * @param {Number} exp
      * @returns 
      */
-    static getExp(exp, level) {
-        while (exp >= User.getMaxExp(level)) {
-            exp -= User.getMaxExp(level);
-            level += 1;
-        }
-        return Math.round(exp);
+    static getExp(exp) {
+        return exp % 1000;
     }
 
     /**
@@ -73,11 +70,15 @@ class User {
      * @returns 
      */
     static getLevelFromExp(exp, level) {
-        while (exp >= User.getMaxExp(level)) {
-            exp -= User.getMaxExp(level);
-            level += 1;
+        return Math.floor(exp / 1000) + level;
+    }
+
+    static getReward(oldLevel, newLevel) {
+        let r = 0
+        for (let i = oldLevel + 1; i <= newLevel; i++) {
+            r += i % 10 == 0 ? 10000 : 1000;
         }
-        return level;
+        return r;
     }
 
     /**
@@ -95,25 +96,47 @@ class User {
         user.exp += exp;
         user = await user.save();
 
-        return level != user.lvl ? user.lvl : false;
+        return level != user.lvl ? { lvl: user.lvl, passed: user.lvl - level, reward: User.getReward(level, user.lvl) } : false;
     }
 
     static async totalMoney() {
-        const users = await UserModel.find({})
+        const users = await UserModel.find({}, { coins: 1 });
 
         return users.reduce((acc, user) => {
             return acc + user.coins;
         }, 0);
     }
 
-    static async top50() {
+    static getTotalExpFromLvl(lvl) {
+        return (lvl - 1) * User.getMaxExp();
+    }
+
+    static async totalExp() {
+        const users = await UserModel.find({}, { lvl: 1, exp: 1 });
+
+        return users.reduce((acc, user) => {
+            return acc + user.exp + User.getTotalExpFromLvl(user.lvl);
+        }, 0);
+    }
+
+    static async top50Money() {
         const users = await UserModel.find({}, { id: 1, coins: 1 }, { sort: { coins: -1 } });
+
+        return users.filter(({ id }) => options.guild.members.cache.has(id)).splice(0, 50);
+    }
+
+    static async top50Level() {
+        const users = await UserModel.find({}, { id: 1, lvl: 1, exp: 1 }, { sort: { lvl: -1, exp: -1 } });
 
         return users.filter(({ id }) => options.guild.members.cache.has(id)).splice(0, 50);
     }
 
     static async getMoney(id) {
         return (await UserModel.findOne({ id }, { coins: 1 })).coins;
+    }
+
+    static getLevel(id) {
+        return UserModel.findOne({ id }, { lvl: 1, exp: 1 });
     }
 
     static exists(id) {

@@ -5,13 +5,14 @@ module.exports = {
     run: async function (message) {
         if (message.author.bot) return;
 
-        var exp = Math.round(Math.sqrt(Math.sqrt(message.content.length)) * 6);
-        const levelup = await User.addExp(message.author.id, exp);
+        const levelup = await User.addExp(message.author.id, 50);
 
         if (levelup) {
-            message.reply(`:clap: Vous prenez le temps d'obtenir un niveau supérieur: **${levelup}** :hourglass_flowing_sand: !`);
+            message.reply(levelup.passed == 1 ?
+                `:clap: Vous prenez le temps d'obtenir un niveau supérieur: **${levelup.lvl}** et vous obtenez **${levelup.reward}** Limon Noir :hourglass_flowing_sand: !` :
+                `:clap: Vous prenez le temps d'obtenir **${levelup.passed}** niveaux supérieurs: **${levelup.lvl}** et vous obtenez **${levelup.reward}** Limon Noir :hourglass_flowing_sand: !`);
         }
 
-        await User.addCoins(message.author.id, Math.min(Math.floor(Math.sqrt(Math.sqrt(message.content.length)) * 25), 70));
+        await User.addCoins(message.author.id, 50);
     }
 }
