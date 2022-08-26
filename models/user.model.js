@@ -1,5 +1,7 @@
+const { GuildMember } = require("discord.js");
 const { Schema, model } = require("mongoose");
 const { options } = require("../client");
+const { getRole } = require("../service/config");
 
 const userSchema = new Schema({
     id: { type: String, unique: true, required: true },
@@ -13,26 +15,26 @@ userSchema.pre("save", async function (next) {
     var doc = await UserModel.findOne({ id: this.id }).catch(console.error);
     if (!doc) return next();
 
-    if (doc.exp == this.exp) return next();
+    if (doc.exp != this.exp) {
+        doc.exp = this.exp;
+        var lvl = doc.lvl;
+        var exp = doc.exp;
 
-    doc.exp = this.exp;
-    var lvl = doc.lvl;
-    var exp = doc.exp;
+        var newLvl = User.getLevelFromExp(exp, lvl);
 
-    var newLvl = User.getLevelFromExp(exp, lvl);
+        if (newLvl <= 0) return next("Niveau négatif");
 
-    if (newLvl <= 0) return next("Niveau négatif");
+        if (newLvl > 1000) {
+            this.exp = User.getMaxExp() - 1;
+            return next();
+        }
 
-    if (newLvl > 1000) {
-        this.exp = User.getMaxExp() - 1;
-        return next();
-    }
-
-    if (newLvl != lvl) {
-        // level up
-        this.exp = User.getExp(exp);
-        this.lvl = newLvl;
-        this.coins += User.getReward(lvl, newLvl);
+        if (newLvl != lvl) {
+            // level up
+            this.exp = User.getExp(exp);
+            this.lvl = newLvl;
+            this.coins += User.getReward(lvl, newLvl);
+        }
     }
 
     next();
@@ -83,11 +85,21 @@ class User {
 
     /**
      * 
-     * @param {String} id 
+     * @param {GuildMember} member 
      * @param {Number} exp 
      * @returns 
      */
-    static async addExp(id, exp) {
+    static async addExp(member, exp) {
+        const id = member.id;
+        let bonus = 1;
+        const roletla = getRole("grade-timelapse");
+        const roletle = getRole("grade-timeless");
+
+        if (roletla && member.roles.cache.has(roletla.id)) bonus = 1.1;
+        if (roletle && member.roles.cache.has(roletle.id)) bonus = 1.3;
+
+        exp *= bonus;
+
         let user = await UserModel.findOne({ id });
         if (!user) {
             user = await User.create(id);

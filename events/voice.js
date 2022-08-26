@@ -15,15 +15,15 @@ module.exports = {
     run: async function (oldState, newState) {
         if (oldState.member.bot) return;
 
-        let channel = newState.channel;
-        let afk = options.guild.afkChannelId;
+        const channel = newState.channel;
+        const afk = options.guild.afkChannelId;
 
         if ((!oldState.channel || oldState.channelId == afk) && channel && channel.id != afk) {
             if (!voice.find(a => a.id == newState.member.id)) voice.push({ id: newState.member.id, time: new Date().getTime() });
         }
 
         if ((!channel || channel.id == afk) && oldState.channel && oldState.channelId != afk) {
-            await endVoice(newState.member.id, oldState.channel);
+            await endVoice(newState.member, oldState.channel);
         }
     }
 }
@@ -33,14 +33,15 @@ module.exports = {
  * @param {String} id 
  * @param {VoiceChannel} channel 
  */
-async function endVoice(id, channel) {
-    var v = voice.find(a => a.id == id);
+async function endVoice(member, channel) {
+    const id = member.id;
+    const v = voice.find(a => a.id == id);
     if (v) {
         voice.splice(voice.indexOf(v), 1);
 
-        var duration = new Date().getTime() - v.time;
+        const duration = new Date().getTime() - v.time;
 
-        const levelup = await User.addExp(id, Math.floor(duration / 1000 / 60 / 60 * 1000));
+        const levelup = await User.addExp(member, Math.floor(duration / 1000 / 60 / 60 * 1000));
         if (levelup) {
             message.reply(levelup.passed == 1 ?
                 `<@${id}>, :clap: Vous prenez le temps d'obtenir un niveau supérieur: **${levelup.lvl}** et vous obtenez **${levelup.reward}** Limon Noir :hourglass_flowing_sand: !` :

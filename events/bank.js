@@ -49,7 +49,7 @@ const items = [
             let id = Date.now() + "-role-perso";
             const modal = new ModalBuilder().setCustomId(id).setTitle("Customisation de Rôle").setComponents(
                 new ActionRowBuilder().addComponents(
-                    new TextInputBuilder().setCustomId("name").setLabel("Nom du rôle").setMinLength(1).setMaxLength(30).setRequired(true).setPlaceholder("Je suis le meilleur").setStyle(TextInputStyle.Short)),
+                    new TextInputBuilder().setCustomId("name").setLabel("Nom du rôle").setMinLength(1).setMaxLength(32).setRequired(true).setPlaceholder("Ah Parfait, J'ai Le Temps").setStyle(TextInputStyle.Short)),
                 new ActionRowBuilder().addComponents(
                     new TextInputBuilder().setCustomId("color").setLabel("Couleur du rôle (hex ou nom)").setMinLength(1).setMaxLength(20).setRequired(true).setStyle(TextInputStyle.Short).setPlaceholder("red, #ff0000, etc..."),
                 ));

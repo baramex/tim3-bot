@@ -30,7 +30,7 @@ module.exports = {
             ctx.drawImage(images.water, 0, 0, width, height, canvas.width / 2 - w / 2, canvas.height / 2 - h / 2, w, h);
 
             const embed = new EmbedBuilder()
-                .setColor(COLORS.casino)
+                .setColor(COLORS.info)
                 .setTitle(":hourglass_flowing_sand: | TIM€・Niveau")
                 .setFooter(options.footer)
                 .setDescription("Vous êtes au niveau **" + level.lvl + "** avec **" + reduce(level.exp) + "**/1000 exp.")

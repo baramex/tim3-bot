@@ -19,7 +19,7 @@ function durationTime(ms) {
     var m = Math.floor(ms / (1000 * 60 * 60 * 24 * 30)) % 12;
     var d = Math.floor(ms / (1000 * 60 * 60 * 24)) % 30;
     var h = Math.floor(ms / (1000 * 60 * 60)) % 24;
-    var min = Math.floor(ms / (1000 * 60)) % 60;
+    var min = Math.ceil(ms / (1000 * 60)) % 60;
 
     return ((y ? (y + " années ") : "") + (m ? m + " mois " : "") + (d ? d + " jours " : "") + (h ? h + " heures " : "") + (min ? min + " minutes " : "")).trim() || "0 minutes";
 }

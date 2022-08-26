@@ -5,7 +5,7 @@ module.exports = {
     run: async function (message) {
         if (message.author.bot) return;
 
-        const levelup = await User.addExp(message.author.id, 50);
+        const levelup = await User.addExp(message.member, 50);
 
         if (levelup) {
             message.reply(levelup.passed == 1 ?
