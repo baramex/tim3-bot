@@ -29,7 +29,7 @@ module.exports = {
             new ButtonBuilder().setCustomId("pierre").setEmoji("🪨").setLabel("Pierre").setStyle(ButtonStyle.Primary),
             new ButtonBuilder().setCustomId("feuille").setEmoji("📄").setLabel("Feuille").setStyle(ButtonStyle.Primary),
             new ButtonBuilder().setCustomId("ciseaux").setEmoji("✂️").setLabel("Ciseaux").setStyle(ButtonStyle.Primary)
-        ].sort(() => Math.random() - 0.5), closeButton]);
+        ].sort(() => Math.random() - 0.5), closeButton(host.id)]);
 
         if (!message) message = await channel.send({ components: [row] });
         else message.edit({ components: [row] });
@@ -41,7 +41,7 @@ module.exports = {
             embed.setDescription("Choississez votre signe, en attente de **" + players.filter(a => !Object.keys(signs).includes(a.id)).map(a => a.user.username).join(", ") + "**." + (mise > 0 ? "\nMise: **" + convertMonetary(mise) + "** Limon Noir" : ""));
             await message.edit({ embeds: [embed] });
 
-            const response = await message.awaitMessageComponent({ filter: m => m.member.id === host.id, componentType: ComponentType.Button, time: 1000 * 60 * 5 });
+            const response = await message.awaitMessageComponent({ filter: m => players.some(a => a.id === m.user.id), componentType: ComponentType.Button, time: 1000 * 60 * 5 });
             if (!["pierre", "feuille", "ciseaux"].includes(response.customId)) return;
 
             signs[response.user.id] = response.customId;
@@ -61,7 +61,7 @@ module.exports = {
         embed.setImage("attachment://pfc.png");
 
         const attach = new AttachmentBuilder(generateCanvas(players, host, winner, signs).toBuffer(), { name: "pfc.png" });
-        await message.edit({ embeds: [embed], components: [closeButtonRow], files: [attach] });
+        await message.edit({ embeds: [embed], components: [closeButtonRow(host.id)], files: [attach] });
     }
 };
 

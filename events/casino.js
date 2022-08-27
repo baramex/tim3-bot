@@ -38,11 +38,12 @@ module.exports = {
 
             if (!players) players = [interaction.member];
 
-            if (mise) players.forEach(p => User.addCoins(p.id, -mise));
+            if (mise) players.forEach(p => User.addCoins(p.id || p.member.id, -mise));
             await game.run(thread, interaction.member, players, mise, message);
         }
-        else if (interaction.customId == "casino-close") {
-            await interaction.channel.delete();
+        else if (interaction.customId.startsWith("casino-close-")) {
+            const id = interaction.customId.replace("casino-close-", "");
+            if (interaction.user.id === id) await interaction.channel.delete().catch(console.error);
         }
     }
 };
@@ -64,7 +65,7 @@ async function chooseBet(game, interaction) {
 
     let d = isCooldowned(interaction.member.id, game.name);
     if (mise && d) {
-        submit.reply({ content: "Vous devez encore attendre **" + durationTime(d.end - Date.now()) + "**.", ephemeral: true });
+        submit.reply({ content: "Vous devez encore attendre **" + durationTime(d.end - Date.now()) + "** pour miser.", ephemeral: true });
         throw new Error();
     }
 
@@ -87,15 +88,17 @@ async function chooseBet(game, interaction) {
  */
 function lobby(thread, name, game, member, mise) {
     return new Promise(async (res, rej) => {
-        var accepts = [member];
+        var accepts = [];
+        if (game.sameMise) accepts.push(member);
+        else accepts.push({ member, mise });
 
-        var miseTxt = "\n" + (game.sameMise ? mise ? "Mise: **" + convertMonetary(mise) + "** Lemon Noir" : "Aucune mise." : "Mise personnelle.");
+        var miseTxt = "\n" + (game.sameMise ? mise ? "Mise: **" + convertMonetary(mise) + "** Limon Noir" : "Aucune mise." : "Mise personnelle.");
 
         var embed = new EmbedBuilder()
             .setColor(COLORS.casino)
             .setTitle(":hourglass_flowing_sand: | TIM€・" + name)
             .setFooter(options.footer)
-            .setDescription("**" + accepts.map(a => a.user.username).join(", ") + "** " + (accepts.length > 1 ? "ont" : "a") + " rejoint." + miseTxt);
+            .setDescription(accepts.map(a => "**" + (a.member || a).user.username + "**" + (a.mise || a.mise === 0 ? ` (${convertMonetary(a.mise)})` : "")).join(", ") + " " + (accepts.length > 1 ? "ont" : "a") + " rejoint." + miseTxt);
 
         const message = await thread.send({
             embeds: [embed], components: [
@@ -103,7 +106,7 @@ function lobby(thread, name, game, member, mise) {
                     new ButtonBuilder().setCustomId("start").setEmoji("⏯️").setLabel("Lancer").setStyle(ButtonStyle.Success),
                     new ButtonBuilder().setCustomId("join").setEmoji("✔️").setLabel("Rejoindre").setStyle(ButtonStyle.Success),
                     new ButtonBuilder().setCustomId("leave").setEmoji("🚪").setLabel("Quitter").setStyle(ButtonStyle.Danger),
-                    closeButton
+                    closeButton(member.id)
                 ])
             ]
         });
@@ -112,31 +115,36 @@ function lobby(thread, name, game, member, mise) {
         collector.on("collect", async collected => {
             var action = collected.customId;
 
-            collected.deferUpdate();
+            if (game.sameMise || action !== "join") collected.deferUpdate();
 
-            if (action === "casino-close") return;
+            if (action.startsWith("casino-close-")) return;
 
             if (action === "start" && collected.member.id === member.id) {
                 collector.stop();
-                return res({ accepts, message });
+                return res({ players: accepts, message });
             }
 
             if (action === "join") {
-                if (accepts.some(a => a.id === collected.member.id)) return;
-                accepts.push(collected.member);
+                if (accepts.some(a => (a.id || a.member.id) === collected.member.id)) return;
+
+                if (!game.sameMise) var m = await chooseBet(game, collected).catch(() => { });
+
+                if (!game.sameMise && !m && m !== 0) return;
+
+                accepts.push(m ? { member: collected.member, mise: m } : collected.member);
             }
             else if (action === "leave") {
-                if (collected.member.id === member.id || !accepts.some(a => a.id === collected.member.id)) return;
-                accepts = accepts.filter(a => a.id !== collected.user.id);
+                if (collected.member.id === member.id || !accepts.some(a => (a.id || a.member.id) === collected.member.id)) return;
+                accepts = accepts.filter(a => (a.id || a.member.id) !== collected.user.id);
             }
 
             if (accepts.length >= game.maxPlayers) {
                 collector.stop();
-                res({ accepts, message });
+                res({ players: accepts, message });
                 return;
             }
 
-            embed.setDescription("**" + accepts.map(a => a.user.username).join(", ") + "** " + (accepts.length > 1 ? "ont" : "a") + " rejoint." + miseTxt);
+            embed.setDescription(accepts.map(a => "**" + (a.member || a).user.username + "**" + (a.mise || a.mise === 0 ? ` (${convertMonetary(a.mise)})` : "")).join(", ") + " " + (accepts.length > 1 ? "ont" : "a") + " rejoint." + miseTxt);
 
             await message.edit({
                 embeds: [embed]
@@ -144,7 +152,7 @@ function lobby(thread, name, game, member, mise) {
         }).on("end", (collected, reason) => {
             if (reason == "time") {
                 removeCooldown(member.id, name);
-                res({ accepts, message });
+                res({ players: accepts, message });
             }
         });
     });

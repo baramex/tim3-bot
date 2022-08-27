@@ -26,7 +26,7 @@ module.exports = {
 
         const row = new ActionRowBuilder().setComponents([
             new ButtonBuilder().setCustomId("select").setEmoji("➕").setLabel("Sélectionner").setStyle(ButtonStyle.Primary),
-            closeButton
+            closeButton(host.id)
         ]);
 
         const modal = new ModalBuilder()
@@ -75,7 +75,7 @@ module.exports = {
             embed.setColor(COLORS.error);
         }
 
-        message.edit({ embeds: [embed], components: [closeButtonRow] });
+        message.edit({ embeds: [embed], components: [closeButtonRow(host.id)] });
     }
 };
 

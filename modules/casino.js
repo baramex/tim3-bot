@@ -3,8 +3,8 @@ const { getChannel } = require("../service/config");
 const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require("discord.js");
 const fs = require("fs");
 
-const closeButton = new ButtonBuilder().setCustomId("casino-close").setEmoji("✖️").setLabel("Fermer").setStyle(ButtonStyle.Danger);
-const closeButtonRow = new ActionRowBuilder().setComponents(closeButton);
+const closeButton = (id) => new ButtonBuilder().setCustomId("casino-close-" + id).setEmoji("✖️").setLabel("Fermer").setStyle(ButtonStyle.Danger);
+const closeButtonRow = (id) => new ActionRowBuilder().setComponents(closeButton(id));
 
 const games = [];
 fs.readdir("./casino/", (err, files) => {

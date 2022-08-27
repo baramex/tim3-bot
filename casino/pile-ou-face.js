@@ -27,7 +27,7 @@ module.exports = {
         const row = new ActionRowBuilder().setComponents([...[
             new ButtonBuilder().setCustomId("face").setLabel("Face").setStyle(ButtonStyle.Primary),
             new ButtonBuilder().setCustomId("pile").setLabel("Pile").setStyle(ButtonStyle.Secondary)
-        ].sort(() => Math.random() - 0.5), closeButton]);
+        ].sort(() => Math.random() - 0.5), closeButton(host.id)]);
 
         const message = await channel.send({ embeds: [embed], components: [row] });
 
@@ -49,13 +49,13 @@ module.exports = {
             let won = face === wface;
 
             embed.setImage("attachment://coin_" + face + ".png");
-            embed.setDescription("C'est tombé sur **" + face + "** !" + (won ? " Vous avez gagné" : " Vous avez perdu") + (mise ? (" **" + convertMonetary(won ? mise * 2 : mise) + "** Lemon Noir") : "") + ".");
+            embed.setDescription("C'est tombé sur **" + face + "** !" + (won ? " Vous avez gagné" : " Vous avez perdu") + (mise ? (" **" + convertMonetary(won ? mise * 2 : mise) + "** Limon Noir") : "") + ".");
 
             embed.setColor(won ? COLORS.valid : COLORS.error);
 
             if (won && mise) await User.addCoins(host.id, mise * 2).catch(console.log);
 
-            await message.edit({ embeds: [embed], files: ['./ressources/images/coin ' + face + '.png'], components: [closeButtonRow] }).catch(console.log);
+            await message.edit({ embeds: [embed], files: ['./ressources/images/coin ' + face + '.png'], components: [closeButtonRow(host.id)] }).catch(console.log);
         }, 1000);
     }
 };

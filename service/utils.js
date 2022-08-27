@@ -29,14 +29,14 @@ function durationTime(ms) {
  * @param {Number} number 
  * @returns 
  */
-function reduce(number) {
+function reduce(number, float = 1, sep=" ") {
     var scales = ["k", "m"];
     var vals = [1000, 1000000];
-    var str = number;
+    var str = number.toString();
     scales.forEach((scale, i) => {
-        var res = (number / vals[i]).toFixed(1);
+        var res = (number / vals[i]).toFixed(float);
         if (res >= 1) {
-            str = res + " " + scale;
+            str = res + sep + scale;
         }
         else return;
     });
