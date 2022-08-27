@@ -13,12 +13,7 @@ async function updateBank() {
         .setTitle(":hourglass_flowing_sand: | TIM€・Banque")
         .setFooter(options.footer)
         .setDescription(
-            `Il y a actuellement **${convertMonetary(await User.totalMoney())}** Limon Noir sur le serveur.
-
-            Vous pouvez gagnez de des Limon Noir en envoyant des **messages**, en allant dans un **salon vocal**, en cliquant sur le bouton **invest** ainsi qu'en jouant au **casino**.
-
-            Classement top 50:
-            ${(await User.top50Money()).map(({ id, coins }, i) => `${[":first_place:", ":second_place:", ":third_place:", ":medal:", ":military_medal:"][i]} \`${options.guild.members.cache.get(id).user.tag}\` | **${convertMonetary(coins)}** Limon Noir`).join("\n")}
+            `Il y a actuellement **${convertMonetary(await User.totalMoney())}** Limon Noir sur le serveur.\n\nVous pouvez gagnez de des Limon Noir en envoyant des **messages**, en allant dans un **salon vocal**, en cliquant sur le bouton **invest** ainsi qu'en jouant au **casino**.\n\nClassement top 50:\n${(await User.top50Money()).map(({ id, coins }, i) => `${[":first_place:", ":second_place:", ":third_place:", ":medal:", ":military_medal:"][i]} \`${options.guild.members.cache.get(id).user.tag}\` | **${convertMonetary(coins)}** Limon Noir`).join("\n")}
             `
         );
 

@@ -31,7 +31,7 @@ module.exports = {
 
         const message = await channel.send({ embeds: [embed], components: [row] });
 
-        const response = await channel.awaitMessageComponent({ filter: m => m.member.id === host.id, componentType: ComponentType.Button, message, time: 1000 * 60 * 5 });
+        const response = await message.awaitMessageComponent({ filter: m => m.member.id === host.id, componentType: ComponentType.Button, time: 1000 * 60 * 5 });
         if (!["pile", "face"].includes(response.customId)) return;
 
         response.deferUpdate();
@@ -40,7 +40,7 @@ module.exports = {
         var face = getRandomInt(0, 2) == 0 ? "pile" : "face";
 
         embed
-            .setDescription("Lancement de la pièce... " + (mise ? ("**" + convertMonetary(mise) + "** :coin: sont en jeu !") : ""))
+            .setDescription("Lancement de la pièce... " + (mise ? ("**" + convertMonetary(mise) + "** Limon Noir sont en jeu !") : ""))
             .setImage("https://gifsdomi.files.wordpress.com/2012/02/pic3a8ces-de-monnaie-15.gif");
 
         message.edit({ embeds: [embed], components: [] });

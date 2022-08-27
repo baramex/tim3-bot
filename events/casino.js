@@ -34,10 +34,12 @@ module.exports = {
             await thread.members.add(interaction.member.id);
             await interaction.followUp({ content: "Table créée: " + thread.toString(), ephemeral: true })
 
-            if (game.maxPlayers > 1) await lobby(thread, game.name, game, interaction.member, mise);
+            if (game.maxPlayers > 1) var { message, players } = await lobby(thread, game.name, game, interaction.member, mise);
 
-            if (mise) await User.addCoins(host.id, -mise);
-            await game.run(thread, interaction.member, [interaction.member], mise);
+            if (!players) players = [interaction.member];
+
+            if (mise) players.forEach(p => User.addCoins(p.id, -mise));
+            await game.run(thread, interaction.member, players, mise, message);
         }
         else if (interaction.customId == "casino-close") {
             await interaction.channel.delete();
@@ -87,7 +89,7 @@ function lobby(thread, name, game, member, mise) {
     return new Promise(async (res, rej) => {
         var accepts = [member];
 
-        var miseTxt = "\n" + (game.sameMise ? mise ? "Mise de: **" + convertMonetary(mise) + "** Lemon Noir" : "Aucune mise." : "Mise personnelle.");
+        var miseTxt = "\n" + (game.sameMise ? mise ? "Mise: **" + convertMonetary(mise) + "** Lemon Noir" : "Aucune mise." : "Mise personnelle.");
 
         var embed = new EmbedBuilder()
             .setColor(COLORS.casino)
@@ -114,7 +116,10 @@ function lobby(thread, name, game, member, mise) {
 
             if (action === "casino-close") return;
 
-            if (action === "start" && collected.member.id === member.id) return res(accepts);
+            if (action === "start" && collected.member.id === member.id) {
+                collector.stop();
+                return res({ accepts, message });
+            }
 
             if (action === "join") {
                 if (accepts.some(a => a.id === collected.member.id)) return;
@@ -127,7 +132,7 @@ function lobby(thread, name, game, member, mise) {
 
             if (accepts.length >= game.maxPlayers) {
                 collector.stop();
-                res(accepts);
+                res({ accepts, message });
                 return;
             }
 
@@ -139,7 +144,7 @@ function lobby(thread, name, game, member, mise) {
         }).on("end", (collected, reason) => {
             if (reason == "time") {
                 removeCooldown(member.id, name);
-                res(accepts);
+                res({ accepts, message });
             }
         });
     });

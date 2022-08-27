@@ -220,7 +220,7 @@ module.exports = {
                         },
                         {
                             name: "Prix",
-                            value: convertMonetary(item.price) + " :coin:",
+                            value: convertMonetary(item.price) + " Limon Noir",
                             inline: true
                         },
                         {
