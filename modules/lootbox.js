@@ -7,12 +7,12 @@ const closeButton = (id) => new ButtonBuilder().setCustomId("casino-close-" + id
 const closeButtonRow = (id) => new ActionRowBuilder().setComponents(closeButton(id));
 const replayButton = (index) => new ButtonBuilder().setCustomId("play-" + index).setEmoji("🔁").setLabel("Rejouer").setStyle(ButtonStyle.Primary);
 
-const games = [];
-fs.readdir("./casino/", (err, files) => {
+const lootboxes = [];
+fs.readdir("./lootboxes/", (err, files) => {
     if (err) return console.error(err);
     files.forEach(file => {
-        const game = require(`../casino/${file}`);
-        games.push(game);
+        const lootbox = require(`../lootboxes/${file}`);
+        lootboxes.push(lootbox);
     });
 });
 

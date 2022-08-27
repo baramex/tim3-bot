@@ -1,5 +1,5 @@
 const { ActionRowBuilder } = require("@discordjs/builders");
-const { ModalBuilder, TextInputBuilder, TextInputStyle, ThreadChannel, ButtonBuilder, ButtonStyle, ChannelType, EmbedBuilder } = require("discord.js");
+const { ModalBuilder, TextInputBuilder, TextInputStyle, ThreadChannel, ButtonBuilder, ButtonStyle, ChannelType, EmbedBuilder, Message, GuildMember } = require("discord.js");
 const { options, COLORS } = require("../client");
 const User = require("../models/user.model");
 const { games, closeButton } = require("../modules/casino");
@@ -24,22 +24,25 @@ module.exports = {
 
             if (mise > 0) addCooldown(interaction.member.id, game.name, getCooldown(interaction.member));
 
-            const thread = await interaction.channel.threads.create({
-                name: "Table " + game.name,
-                autoArchiveDuration: 60,
-                type: ChannelType.GuildPublicThread
-            });
+            if (interaction.channel.type !== ChannelType.GuildPublicThread) {
+                var thread = await interaction.channel.threads.create({
+                    name: "Table " + game.name,
+                    autoArchiveDuration: 60,
+                    type: ChannelType.GuildPublicThread
+                });
 
-            await interaction.channel.lastMessage.delete();
-            await thread.members.add(interaction.member.id);
-            await interaction.followUp({ content: "Table créée: " + thread.toString(), ephemeral: true })
+                await interaction.channel.lastMessage.delete();
+                await thread.members.add(interaction.member.id);
+                await interaction.followUp({ content: "Table créée: " + thread.toString(), ephemeral: true });
+            }
+            else var message = interaction.message;
 
-            if (game.maxPlayers > 1) var { message, players } = await lobby(thread, game.name, game, interaction.member, mise);
+            if (game.maxPlayers > 1) var { message, players } = await lobby(thread, game.name, game, interaction.member, mise, message);
 
             if (!players) players = [interaction.member];
 
             if (mise) players.forEach(p => User.addCoins(p.id || p.member.id, -mise));
-            await game.run(thread, interaction.member, players, mise, message);
+            await game.run(thread, interaction.member, players, mise, message, game);
         }
         else if (interaction.customId.startsWith("casino-close-")) {
             const id = interaction.customId.replace("casino-close-", "");
@@ -83,37 +86,40 @@ async function chooseBet(game, interaction) {
  * 
  * @param {ThreadChannel} thread 
  * @param {String} name 
+ * @param {*} game
+ * @param {GuildMember} member
  * @param {number} [mise] 
+ * @param {Message} [m] 
  * @returns 
  */
-function lobby(thread, name, game, member, mise) {
+function lobby(thread, name, game, member, mise, m) {
     return new Promise(async (res, rej) => {
-        var accepts = [];
+        let accepts = [];
         if (game.sameMise) accepts.push(member);
         else accepts.push({ member, mise });
 
-        var miseTxt = "\n" + (game.sameMise ? mise ? "Mise: **" + convertMonetary(mise) + "** Limon Noir" : "Aucune mise." : "Mise personnelle.");
+        const miseTxt = "\n" + (game.sameMise ? mise ? "Mise: **" + convertMonetary(mise) + "** Limon Noir" : "Aucune mise." : "Mise personnelle.");
 
-        var embed = new EmbedBuilder()
+        const embed = new EmbedBuilder()
             .setColor(COLORS.casino)
             .setTitle(":hourglass_flowing_sand: | TIM€・" + name)
             .setFooter(options.footer)
             .setDescription(accepts.map(a => "**" + (a.member || a).user.username + "**" + (a.mise || a.mise === 0 ? ` (${convertMonetary(a.mise)})` : "")).join(", ") + " " + (accepts.length > 1 ? "ont" : "a") + " rejoint." + miseTxt);
 
-        const message = await thread.send({
-            embeds: [embed], components: [
-                new ActionRowBuilder().setComponents([
-                    new ButtonBuilder().setCustomId("start").setEmoji("⏯️").setLabel("Lancer").setStyle(ButtonStyle.Success),
-                    new ButtonBuilder().setCustomId("join").setEmoji("✔️").setLabel("Rejoindre").setStyle(ButtonStyle.Success),
-                    new ButtonBuilder().setCustomId("leave").setEmoji("🚪").setLabel("Quitter").setStyle(ButtonStyle.Danger),
-                    closeButton(member.id)
-                ])
-            ]
-        });
+        const row = new ActionRowBuilder().setComponents([
+            new ButtonBuilder().setCustomId("start").setEmoji("⏯️").setLabel("Lancer").setStyle(ButtonStyle.Success),
+            new ButtonBuilder().setCustomId("join").setEmoji("✔️").setLabel("Rejoindre").setStyle(ButtonStyle.Success),
+            new ButtonBuilder().setCustomId("leave").setEmoji("🚪").setLabel("Quitter").setStyle(ButtonStyle.Danger),
+            closeButton(member.id)
+        ]);
 
-        var collector = message.createMessageComponentCollector({ filter: int => int.isButton(), time: 1000 * 60 * 5 });
+        const message = thread ? await thread.send({
+            embeds: [embed], components: [row]
+        }) : await m.edit({ embeds: [embed], components: [row], files: [] })
+
+        const collector = message.createMessageComponentCollector({ filter: int => int.isButton(), time: 1000 * 60 * 5 });
         collector.on("collect", async collected => {
-            var action = collected.customId;
+            const action = collected.customId;
 
             if (game.sameMise || action !== "join") collected.deferUpdate();
 

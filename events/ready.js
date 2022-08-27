@@ -3,6 +3,7 @@ const Enmap = require("enmap");
 const { client, options } = require("../client");
 const fs = require("fs");
 const { fastUpdate } = require("../service/update");
+const { invites } = require("../service/inviter");
 
 module.exports = {
     name: "ready",
@@ -40,6 +41,8 @@ module.exports = {
                 client.commands.set(props.info.name, props);
             });
         });
+
+        invites.push(...(await guild.invites.fetch()).map(a => ({ id: a.inviter.id, uses: a.uses || 0, code: a.code })));
 
         await fastUpdate();
     }

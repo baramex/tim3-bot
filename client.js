@@ -15,7 +15,8 @@ const client = new Discord.Client({
         Discord.GatewayIntentBits.GuildMessages,
         Discord.GatewayIntentBits.GuildPresences,
         Discord.GatewayIntentBits.MessageContent,
-        Discord.GatewayIntentBits.GuildVoiceStates
+        Discord.GatewayIntentBits.GuildVoiceStates,
+        Discord.GatewayIntentBits.GuildInvites
     ]
 });
 client.login(process.env.BOT_TOKEN);

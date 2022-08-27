@@ -1,9 +1,12 @@
+const { MessageType } = require("discord.js");
 const User = require("../models/user.model");
 
 module.exports = {
     name: "messageCreate",
     run: async function (message) {
-        if (message.author.bot) return;
+        if (message.author.bot || ![MessageType.Default, MessageType.Reply].includes(message.type)) return;
+
+        console.log(message.type);
 
         const levelup = await User.addExp(message.member, 50);
 

@@ -1,7 +1,7 @@
 const { ButtonStyle, Colors, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ThreadChannel, ComponentType } = require("discord.js");
 const { COLORS, options } = require("../client");
 const User = require("../models/user.model");
-const { closeButton, closeButtonRow } = require("../modules/casino");
+const { closeButton, closeButtonRow, replayButton, games } = require("../modules/casino");
 const { convertMonetary } = require("../service/utils");
 
 module.exports = {
@@ -17,7 +17,7 @@ module.exports = {
      * @param {*} players 
      * @param {*} mise 
      */
-    run: async (channel, host, players, mise) => {
+    run: async (channel, host, players, mise, m, game) => {
         let embed = new EmbedBuilder()
             .setColor(COLORS.casino)
             .setTitle(":hourglass_flowing_sand: | TIM€・Pile ou Face")
@@ -29,7 +29,7 @@ module.exports = {
             new ButtonBuilder().setCustomId("pile").setLabel("Pile").setStyle(ButtonStyle.Secondary)
         ].sort(() => Math.random() - 0.5), closeButton(host.id)]);
 
-        const message = await channel.send({ embeds: [embed], components: [row] });
+        const message = m ? await m.edit({ embeds: [embed], components: [row], files: [] }) : await channel.send({ embeds: [embed], components: [row] });
 
         const response = await message.awaitMessageComponent({ filter: m => m.member.id === host.id, componentType: ComponentType.Button, time: 1000 * 60 * 5 });
         if (!["pile", "face"].includes(response.customId)) return;
@@ -55,7 +55,7 @@ module.exports = {
 
             if (won && mise) await User.addCoins(host.id, mise * 2).catch(console.log);
 
-            await message.edit({ embeds: [embed], files: ['./ressources/images/coin ' + face + '.png'], components: [closeButtonRow(host.id)] }).catch(console.log);
+            await message.edit({ embeds: [embed], files: ['./ressources/images/coin ' + face + '.png'], components: [new ActionRowBuilder().setComponents(replayButton(games.indexOf(game)), closeButton(host.id))] }).catch(console.log);
         }, 1000);
     }
 };

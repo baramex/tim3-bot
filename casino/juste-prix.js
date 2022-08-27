@@ -1,7 +1,7 @@
 const { ButtonStyle, Colors, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ThreadChannel, ComponentType, GuildMember, ModalBuilder, TextInputBuilder, TextInputStyle } = require("discord.js");
 const { COLORS, options } = require("../client");
 const User = require("../models/user.model");
-const { closeButton, closeButtonRow } = require("../modules/casino");
+const { closeButton, closeButtonRow, games, replayButton } = require("../modules/casino");
 const { convertMonetary } = require("../service/utils");
 
 module.exports = {
@@ -18,7 +18,7 @@ module.exports = {
      * @param {GuildMember[]} players 
      * @param {number} mise 
      */
-    run: async (channel, host, players, mise) => {
+    run: async (channel, host, players, mise, m, game) => {
         let embed = new EmbedBuilder()
             .setColor(COLORS.casino)
             .setTitle(":hourglass_flowing_sand: | TIM€・Juste Prix")
@@ -33,7 +33,7 @@ module.exports = {
             .setTitle("Juste Prix")
             .setComponents(new ActionRowBuilder().setComponents(new TextInputBuilder().setCustomId("price").setLabel("Prix").setStyle(TextInputStyle.Short).setRequired(true)));
 
-        const message = await channel.send({ components: [row] });
+        const message = m ? await m.edit({ components: [row] }) : await channel.send({ components: [row] });
 
         let price = getRandomInt(1, 101);
         let tries = 5;
@@ -75,7 +75,7 @@ module.exports = {
             embed.setColor(COLORS.error);
         }
 
-        message.edit({ embeds: [embed], components: [closeButtonRow(host.id)] });
+        message.edit({ embeds: [embed], components: [new ActionRowBuilder().setComponents(replayButton(games.indexOf(game)), closeButton(host.id))] });
     }
 };
 

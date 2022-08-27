@@ -6,7 +6,7 @@ const messages = ["Amusez vous bien gnnggng", "Invitez vos Amis gngngng", "Hesit
 
 function init() {
     const ruleMessage = new RecurrenceRule();
-    ruleMessage.hour = new Range(8, 20, 4);
+    ruleMessage.hour = new Range(8, 21, 4);
     ruleMessage.minute = 0;
 
     scheduleJob("send-message", ruleMessage, () => {

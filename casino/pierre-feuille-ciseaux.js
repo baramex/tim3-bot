@@ -3,7 +3,7 @@ const { ButtonStyle, Colors, EmbedBuilder, ActionRowBuilder, ButtonBuilder, Thre
 const { images } = require("..");
 const { COLORS, options } = require("../client");
 const User = require("../models/user.model");
-const { closeButton, closeButtonRow } = require("../modules/casino");
+const { closeButton, closeButtonRow, replayButton, games } = require("../modules/casino");
 const { convertMonetary } = require("../service/utils");
 
 module.exports = {
@@ -19,7 +19,7 @@ module.exports = {
      * @param {*} players 
      * @param {*} mise 
      */
-    run: async (channel, host, players, mise, message) => {
+    run: async (channel, host, players, mise, message, game) => {
         let embed = new EmbedBuilder()
             .setColor(COLORS.casino)
             .setTitle(":hourglass_flowing_sand: | TIM€・Pierre Feuille Ciseaux")
@@ -61,7 +61,7 @@ module.exports = {
         embed.setImage("attachment://pfc.png");
 
         const attach = new AttachmentBuilder(generateCanvas(players, host, winner, signs).toBuffer(), { name: "pfc.png" });
-        await message.edit({ embeds: [embed], components: [closeButtonRow(host.id)], files: [attach] });
+        await message.edit({ embeds: [embed], components: [new ActionRowBuilder().setComponents(replayButton(games.indexOf(game)), closeButton(host.id))], files: [attach] });
     }
 };
 

@@ -3,7 +3,7 @@ const { ButtonStyle, Colors, EmbedBuilder, ActionRowBuilder, ButtonBuilder, Thre
 const { images } = require("..");
 const { COLORS, options } = require("../client");
 const User = require("../models/user.model");
-const { closeButton, closeButtonRow } = require("../modules/casino");
+const { closeButton, closeButtonRow, games, replayButton } = require("../modules/casino");
 const { convertMonetary, reduce } = require("../service/utils");
 
 module.exports = {
@@ -19,7 +19,7 @@ module.exports = {
      * @param {*} players 
      * @param {*} mise 
      */
-    run: async (channel, host, players, mise, message) => {
+    run: async (channel, host, players, mise, message, game) => {
         const CARD_COLORS = {
             CLUBS: { image: images.clubs, color: "#212121" },
             DIAMONDS: { image: images.diamonds, color: "#E72F2F" },
@@ -49,7 +49,7 @@ module.exports = {
             }
 
             croupier.cards[1].type = "reversed";
-            await reply(places, message, turn, splitturn, desc, host);
+            await reply(places, message, turn, splitturn, desc, host, game);
             if (turn == 0) return;
         }
         else {
@@ -57,7 +57,7 @@ module.exports = {
             for (const i in pushs) {
                 await User.addCoins(pushs[i].id, mise);
             }
-            return reply(places, message, 0, 0, pushs.length > 0 ? `Le croupier a fait blackjack mais ${pushs.map(a => `**${a.pseudo}** (${a.mise})`).join(", ")} ${pushs.length == 1 ? "a" : "ont"} récupéré ${pushs.length == 1 ? "sa" : "leur"} mise de ${pushs.map(a => convertMonetary(a.mise)).join(", ")} Limon Noir.` : "Le croupier vous a tous éclaté.", host);
+            return reply(places, message, 0, 0, pushs.length > 0 ? `Le croupier a fait blackjack mais ${pushs.map(a => `**${a.pseudo}** (${a.mise})`).join(", ")} ${pushs.length == 1 ? "a" : "ont"} récupéré ${pushs.length == 1 ? "sa" : "leur"} mise de ${pushs.map(a => convertMonetary(a.mise)).join(", ")} Limon Noir.` : "Le croupier vous a tous éclaté.", host, game);
         }
 
         const collector = message.createMessageComponentCollector({ filter: int => int.isButton() && players.some(a => a.member.id == int.user.id), time: 1000 * 60 * 10 });
@@ -120,7 +120,7 @@ module.exports = {
                 if (val > 21) {
                     desc = "Le croupier a explosé.";
                     winners.push(...places.filter(a => a.pseudo && totalVal(a.cards, 0) <= 21));
-                    winners.push(...places.filter(a => a.pseudo && totalVal(a.cards, 1) <= 21));
+                    winners.push(...places.filter(a => a.pseudo && totalVal(a.cards, 1) && totalVal(a.cards, 1) <= 21));
                 }
                 else {
                     desc = "Le croupier a fait " + val + ".";
@@ -154,11 +154,11 @@ module.exports = {
                 collector.stop();
             }
 
-            await reply(places, message, turn, splitturn, desc, host);
+            await reply(places, message, turn, splitturn, desc, host, game);
         }).on("end", (collected, reason) => {
             if (reason == "time") {
                 bot.removeCommandeCooldown(interaction.member, interaction.commandName);
-                message.edit({ content: "Interaction terminée, 5 minutes écoulées", components: [closeButton(host.id)] }).catch(console.error);
+                message.edit({ content: "Interaction terminée, 10 minutes écoulées", components: [new ActionRowBuilder().setComponents(replayButton(games.indexOf(game)), closeButton(host.id))] }).catch(console.error);
             }
         });
     }
@@ -193,7 +193,7 @@ function totalVal(cards, split = 0) {
     return val;
 }
 
-async function reply(places, message, turn, splitturn, description, host) {
+async function reply(places, message, turn, splitturn, description, host, game) {
     const canvas = generateGame(places, turn, splitturn);
 
     if (turn !== 0) {
@@ -214,7 +214,7 @@ async function reply(places, message, turn, splitturn, description, host) {
     if (description) embed.setDescription(description);
     else if (turn) embed.setDescription("Au tour de **" + places[turn]?.pseudo + "**" + (isSplit(places[turn]?.cards) ? [", première", ", seconde"][splitturn] + " main" : "") + ".");
 
-    const obj = { embeds: [embed], files: [new AttachmentBuilder(canvas.toBuffer(), { name: "bj.png" })], components: row ? [row] : [closeButtonRow(host.id)] };
+    const obj = { embeds: [embed], files: [new AttachmentBuilder(canvas.toBuffer(), { name: "bj.png" })], components: row ? [row] : [new ActionRowBuilder().setComponents(replayButton(games.indexOf(game)), closeButton(host.id))] };
     message.edit(obj);
 }
 
