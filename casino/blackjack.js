@@ -28,7 +28,7 @@ module.exports = {
         };
         const cards = getAllCards(CARD_COLORS);
         const places = [{ type: "croupier", cards: pickupCards(cards, 2, CARD_COLORS) }];
-        places.push(...[0, 1, 2, 3, 4].map(i => ({ type: "player", rot: (i + 1) * 30, id: players[i]?.member.id, pseudo: players[i]?.member.user.username, mise: players[i]?.mise, cards: [{ value: VALUES.ACE, type: "normal", color: CARD_COLORS.DIAMONDS }, { value: VALUES.ACE, type: "normal", color: CARD_COLORS.HEARTS }] })));
+        places.push(...[0, 1, 2, 3, 4].map(i => ({ type: "player", rot: (i + 1) * 30, id: players[i]?.member.id, pseudo: players[i]?.member.user.username, mise: players[i]?.mise, cards: pickupCards(cards, 2, COLORS) })));
         let croupier = places.find(a => a.type == "croupier");
 
         let turn = nextPlayer(places, places.filter(a => a.pseudo || a.type == "croupier").length);
@@ -118,19 +118,23 @@ module.exports = {
                 let val = totalVal(croupier.cards);
                 if (val > 21) {
                     desc = "Le croupier a explosé.";
-                    winners.push(...places.filter(a => a.pseudo && totalVal(a.cards, 0) < 21));
-                    winners.push(...places.filter(a => a.pseudo && totalVal(a.cards, 1) < 21));
+                    winners.push(...places.filter(a => a.pseudo && totalVal(a.cards, 0) <= 21));
+                    winners.push(...places.filter(a => a.pseudo && totalVal(a.cards, 1) <= 21));
                 }
                 else {
                     desc = "Le croupier a fait " + val + ".";
-                    winners.push(...places.filter(a => a.pseudo && totalVal(a.cards, 0) > val && totalVal(a.cards, 0) < 21));
-                    winners.push(...places.filter(a => a.pseudo && totalVal(a.cards, 1) > val && totalVal(a.cards, 1) < 21));
+                    winners.push(...places.filter(a => a.pseudo && totalVal(a.cards, 0) > val && totalVal(a.cards, 0) <= 21));
+                    winners.push(...places.filter(a => a.pseudo && totalVal(a.cards, 1) > val && totalVal(a.cards, 1) <= 21));
                     pushs.push(...places.filter(a => a.pseudo && totalVal(a.cards, 0) == val));
                     pushs.push(...places.filter(a => a.pseudo && totalVal(a.cards, 1) == val));
                 }
 
                 bj.push(...places.filter(a => a.pseudo && a.cards.length == 2 && totalVal(a.cards, 0) == 21));
                 bj.push(...places.filter(a => a.pseudo && a.cards.length == 2 && totalVal(a.cards, 1) == 21));
+                bj.forEach(a => {
+                    const i = winners.findIndex(b => b.id == a.id);
+                    if (i !== -1) winners.splice(i, 1);
+                });
 
                 if (pushs.length > 0) desc += ` ${pushs.map(a => `**${a.pseudo}** (${convertMonetary(a.mise)})`).join(", ")} ${pushs.length == 1 ? "a" : "ont"} récupéré ${pushs.length == 1 ? "sa" : "leur"} mise de **${pushs.map(a => convertMonetary(a.mise)).join(", ")}** Limon Noir.`;
                 if (winners.length > 0) desc += ` ${winners.map(a => `**${a.pseudo}** (${convertMonetary(a.mise)})`).join(", ")} ${winners.length == 1 ? "a" : "ont"} gagné et ${winners.length == 1 ? "a" : "ont"} remporté **${winners.map(a => convertMonetary(a.mise * 2)).join(", ")}** Limon Noir.`;
@@ -148,8 +152,6 @@ module.exports = {
 
                 collector.stop();
             }
-
-            console.log(desc)
 
             await reply(places, message, turn, splitturn, desc, host);
         }).on("end", (collected, reason) => {
@@ -177,10 +179,10 @@ function isSplit(cards) {
 }
 
 function totalVal(cards, split = 0) {
-    let val = cards.filter(a => a.type.startsWith("split-") ? a.type == "split-" + split : true).map(a => a.value == "A" ? 11 : Number(a.value) || 10).reduce((p, c) => p + c, 0);
+    let val = cards.filter(a => (split || a.type.startsWith("split-")) ? a.type == "split-" + split : true).map(a => a.value == "A" ? 11 : Number(a.value) || 10).reduce((p, c) => p + c, 0);
 
     if (val > 21) {
-        let nAce = cards.filter(a => a.value == "A" && a.type != "reversed" && (a.type.startsWith("split-") ? a.type == "split-" + split : true)).length;
+        let nAce = cards.filter(a => a.value == "A" && a.type != "reversed" && ((split || a.type.startsWith("split-")) ? a.type == "split-" + split : true)).length;
         while (nAce > 0 && val > 21) {
             nAce--;
             val -= 10;
