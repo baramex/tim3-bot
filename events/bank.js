@@ -186,12 +186,8 @@ module.exports = {
         }
         else if (interaction.customId == "work") {
             let work = works.find(w => w.id == interaction.member.id);
-            if (!work) {
-                works.push({ id: interaction.member.id, end: Date.now() + 4 * 60 * 60 * 1000 });
-
-                await interaction.reply({ ephemeral: true, content: "Vous investissez dans le serveur, revenez dans **4 heures** pour récupérer vos gains." });
-            }
-            else if (work.end <= Date.now()) {
+            if (!work || work.end <= Date.now()) {
+                if (!work) work = works[works.push({ id: interaction.member.id, end: Date.now() + 4 * 60 * 60 * 1000 }) - 1];
                 work.end = Date.now() + (4 * 60 * 60 * 1000);
 
                 User.addCoins(interaction.member.id, 3000);

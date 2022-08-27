@@ -28,7 +28,7 @@ module.exports = {
         };
         const cards = getAllCards(CARD_COLORS);
         const places = [{ type: "croupier", cards: pickupCards(cards, 2, CARD_COLORS) }];
-        places.push(...[0, 1, 2, 3, 4].map(i => ({ type: "player", rot: (i + 1) * 30, id: players[i]?.member.id, pseudo: players[i]?.member.user.username, mise: players[i]?.mise, cards: pickupCards(cards, 2, COLORS) })));
+        places.push(...[0, 1, 2, 3, 4].map(i => ({ type: "player", rot: (i + 1) * 30, id: players[i]?.member.id, pseudo: players[i]?.member.user.username, mise: players[i]?.mise, cards: pickupCards(cards, 2, CARD_COLORS) })));
         let croupier = places.find(a => a.type == "croupier");
 
         let turn = nextPlayer(places, places.filter(a => a.pseudo || a.type == "croupier").length);
@@ -68,6 +68,7 @@ module.exports = {
 
             let action = collected.customId;
             if (action == "split" && (place.cards.length != 2 || place.cards[0].value != place.cards[1].value)) return collected.reply({ ephemeral: true, content: "Pour split, vos deux cartes doivent être de même valeur." });
+            if (action == "double" && place.cards.length != 2) return collected.reply({ ephemeral: true, content: "Pour doubler, il vous faut 2 cartes." });
 
             if (totalVal(place.cards, splitturn) == 21) {
                 action = "";
