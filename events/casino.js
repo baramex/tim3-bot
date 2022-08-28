@@ -104,7 +104,7 @@ function lobby(thread, name, game, member, mise, m) {
             .setColor(COLORS.casino)
             .setTitle(":hourglass_flowing_sand: | TIM€・" + name)
             .setFooter(options.footer)
-            .setDescription(accepts.map(a => "**" + (a.member || a).user.username + "**" + (a.mise || a.mise === 0 ? ` (${convertMonetary(a.mise)})` : "")).join(", ") + " " + (accepts.length > 1 ? "ont" : "a") + " rejoint." + miseTxt);
+            .setDescription(accepts.map(a => "**" + (a.member || a).user.username + "**" + (a.mise || a.mise === 0 ? ` (${convertMonetary(a.mise)})` : "")).join(", ") + " " + (accepts.length > 1 ? "ont" : "a") + " rejoint." + miseTxt + "\nPour inviter vos amis, il vous suffit de les mentionner.");
 
         const row = new ActionRowBuilder().setComponents([
             new ButtonBuilder().setCustomId("start").setEmoji("⏯️").setLabel("Lancer").setStyle(ButtonStyle.Success),
@@ -150,7 +150,7 @@ function lobby(thread, name, game, member, mise, m) {
                 return;
             }
 
-            embed.setDescription(accepts.map(a => "**" + (a.member || a).user.username + "**" + (a.mise || a.mise === 0 ? ` (${convertMonetary(a.mise)})` : "")).join(", ") + " " + (accepts.length > 1 ? "ont" : "a") + " rejoint." + miseTxt);
+            embed.setDescription(accepts.map(a => "**" + (a.member || a).user.username + "**" + (a.mise || a.mise === 0 ? ` (${convertMonetary(a.mise)})` : "")).join(", ") + " " + (accepts.length > 1 ? "ont" : "a") + " rejoint." + miseTxt + "\nPour inviter vos amis, il vous suffit de les mentionner.");
 
             await message.edit({
                 embeds: [embed]
