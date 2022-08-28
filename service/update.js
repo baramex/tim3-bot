@@ -27,6 +27,8 @@ async function fastUpdate() {
 
 function update() {
     options.guild.members.cache.forEach(async m => {
+        if (m.user.bot) return;
+
         let user = await User.exists(m.id).catch(console.error);
         if (!user) await User.create(m.id).catch(console.error);
     });
