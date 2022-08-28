@@ -1,4 +1,5 @@
 const { options } = require("../client");
+const User = require("../models/user.model");
 const { updateBank } = require("../modules/bank");
 const { updateCasino } = require("../modules/casino");
 const { updateLevel } = require("../modules/level");
@@ -24,4 +25,11 @@ async function fastUpdate() {
     }
 }
 
-module.exports = { fastUpdate };
+function update() {
+    options.guild.members.cache.forEach(async m => {
+        let user = await User.exists(m.id).catch(console.error);
+        if (!user) await User.create(m.id).catch(console.error);
+    });
+}
+
+module.exports = { fastUpdate, update };
