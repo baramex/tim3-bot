@@ -2,7 +2,7 @@ const { scheduleJob, RecurrenceRule, Range } = require("node-schedule");
 const { getChannel } = require("./config");
 const { fastUpdate, update } = require("./update");
 
-const messages = ["Amusez vous bien gnnggng", "Invitez vos Amis gngngng", "Hesitez pas à visiter la boutique", "GiveAway Tous les 2 jours"];
+const messages = ["Vous pouvez Invitez vos Amis et Gagner 3000 Limon Noirs pour votre engagement 🤝", "Vous pouvez consulter la catégorie : Nous Soutenir pour débloquer toutes les fonctionnalités du Serveur et accéder aux GiveAway Privés 💸", "Des GiveAway/Tournoi avec Récompenses , sont organisés tout les 2/3 Jours ☄️", "Merci d'être sur le serveur Tim€ , Nous espérons que vous passerez un bon moment ⌛"];
 
 function init() {
     const ruleMessage = new RecurrenceRule();
