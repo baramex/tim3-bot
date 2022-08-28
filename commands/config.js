@@ -2,6 +2,7 @@ const { EmbedBuilder, CommandInteraction, ButtonBuilder, ActionRowBuilder, Chann
 const { COLORS, options } = require("../client");
 const { updateBank } = require("../modules/bank");
 const { updateLevel } = require("../modules/level");
+const { updateLootboxes } = require("../modules/lootbox");
 const { updateTicket } = require("../modules/ticket");
 const { config } = require("../service/config");
 
@@ -234,6 +235,7 @@ module.exports.run = async (interaction) => {
                         case "banque": await updateBank().catch(console.error); break;
                         case "tickets": await updateTicket().catch(console.error); break;
                         case "niveau": await updateLevel().catch(console.error); break;
+                        case "loot-boxes": await updateLootboxes().catch(console.error); break;
                     }
                 }
 

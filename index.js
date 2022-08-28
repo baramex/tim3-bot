@@ -1,18 +1,9 @@
 const fs = require("fs");
-const { loadImage } = require("canvas");
 require("dotenv").config();
 const { client } = require("./client");
 
 require("./service/database").init();
 require("./service/schedule").init();
-
-let images = {};
-fs.readdir("./ressources/images/", (err, files) => {
-    if (err) return console.error(err);
-    files.forEach(async file => {
-        images[file.split(".")[0]] = await loadImage("./ressources/images/" + file);
-    });
-});
 
 fs.readdir("./events/", (err, files) => {
     if (err) return console.error(err);
@@ -28,5 +19,3 @@ fs.readdir("./events/", (err, files) => {
         });
     });
 });
-
-module.exports = { images };

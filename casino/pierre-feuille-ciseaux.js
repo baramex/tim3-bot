@@ -1,6 +1,6 @@
 const { createCanvas } = require("canvas");
 const { ButtonStyle, Colors, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ThreadChannel, ComponentType, AttachmentBuilder } = require("discord.js");
-const { images } = require("..");
+const { images } = require("../client");
 const { COLORS, options } = require("../client");
 const User = require("../models/user.model");
 const { closeButton, closeButtonRow, replayButton, games } = require("../modules/casino");

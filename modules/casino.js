@@ -32,7 +32,7 @@ async function updateCasino() {
 
     const fetchedMessages = (await channel.messages.fetch({ limit: 50 })).filter(m => m.author.id == client.user.id);
     messages.forEach(m => {
-        const message = fetchedMessages.find(a => a.embeds[0]?.data.title.endsWith(m.embeds[0].data.title));
+        const message = fetchedMessages.find(a => a.embeds[0]?.data.title === m.embeds[0].data.title);
 
         if (message) message.edit(m).catch(console.error);
         else channel.send(m).catch(console.error);

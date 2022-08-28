@@ -31,7 +31,7 @@ module.exports = {
                     type: ChannelType.GuildPublicThread
                 });
 
-                await interaction.channel.lastMessage.delete();
+                await interaction.channel.lastMessage?.delete();
                 await thread.members.add(interaction.member.id);
                 await interaction.followUp({ content: "Table créée: " + thread.toString(), ephemeral: true });
             }
@@ -46,7 +46,7 @@ module.exports = {
         }
         else if (interaction.customId.startsWith("casino-close-")) {
             const id = interaction.customId.replace("casino-close-", "");
-            if (interaction.user.id === id) await interaction.channel.delete().catch(console.error);
+            if (interaction.user.id === id) await interaction.channel?.delete().catch(console.error);
         }
     }
 };
@@ -180,7 +180,7 @@ function getMinBet(member) {
 }
 
 function getMaxBet(member) {
-    return member.roles.cache.has(getRole("grade-timelapse")?.id) ? 100_000 : member.roles.cache.has(getRole("grade-timeless")?.id) ? 1_000_000_000 : 10_000;
+    return member.roles.cache.has(getRole("grade-timelapse")?.id) ? 30_000 : member.roles.cache.has(getRole("grade-timeless")?.id) ? 50_000 : 10_000;
 }
 
 function getCooldown(member) {

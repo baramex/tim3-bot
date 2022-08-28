@@ -10,6 +10,7 @@ config.defaults({
         { event: "banque", description: "Salon de la banque.", types: [ChannelType.GuildText] },
         { event: "niveau", description: "Salon du niveau/exp.", types: [ChannelType.GuildText] },
         { event: "casino", description: "Salon du casino", types: [ChannelType.GuildText] },
+        { event: "lootboxes", description: "Salon des loot boxes", types: [ChannelType.GuildText] },
         { event: "tickets", description: "Salon public pour ouvrir des tickets.", types: [ChannelType.GuildText] },
         { event: "tickets-parent", description: "Catégorie privée où seront disposées les tickets.", types: [ChannelType.GuildCategory] },
         { event: "archives-tickets-parent", description: "Catégorie privée où seront disposées les tickets archivés.", types: [ChannelType.GuildCategory] }

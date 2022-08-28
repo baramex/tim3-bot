@@ -1,6 +1,6 @@
 const { createCanvas } = require("canvas");
 const { ButtonStyle, Colors, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ThreadChannel, ComponentType, AttachmentBuilder } = require("discord.js");
-const { images } = require("..");
+const { images } = require("../client");
 const { COLORS, options } = require("../client");
 const User = require("../models/user.model");
 const { closeButton, closeButtonRow, games, replayButton } = require("../modules/casino");
@@ -67,7 +67,7 @@ module.exports = {
             if (collected.user.id != place.id) return collected.reply({ ephemeral: true, content: "Ce n'est pas votre tour !" });
 
             let action = collected.customId;
-            if (action == "split" && (place.cards.length != 2 || place.cards[0].value != place.cards[1].value)) return collected.reply({ ephemeral: true, content: "Pour split, vos deux cartes doivent être de même valeur." });
+            if (action == "split" && (place.cards.length != 2 || (Number(place.cards[0].value) || 10) != (Number(place.cards[1].value) || 10))) return collected.reply({ ephemeral: true, content: "Pour split, vos deux cartes doivent être de même valeur." });
             if (action == "double" && place.cards.length != 2) return collected.reply({ ephemeral: true, content: "Pour doubler, il vous faut 2 cartes." });
 
             if (totalVal(place.cards, splitturn) == 21) {

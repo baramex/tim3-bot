@@ -1,11 +1,12 @@
 const { client, COLORS, options } = require("../client");
 const { getChannel } = require("../service/config");
-const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require("discord.js");
+const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, AttachmentBuilder } = require("discord.js");
 const fs = require("fs");
+const { convertMonetary } = require("../service/utils");
 
-const closeButton = (id) => new ButtonBuilder().setCustomId("casino-close-" + id).setEmoji("✖️").setLabel("Fermer").setStyle(ButtonStyle.Danger);
+const closeButton = (id) => new ButtonBuilder().setCustomId("lb-close-" + id).setEmoji("✖️").setLabel("Fermer").setStyle(ButtonStyle.Danger);
 const closeButtonRow = (id) => new ActionRowBuilder().setComponents(closeButton(id));
-const replayButton = (index) => new ButtonBuilder().setCustomId("play-" + index).setEmoji("🔁").setLabel("Rejouer").setStyle(ButtonStyle.Primary);
+const replayButton = (index) => new ButtonBuilder().setCustomId("open-" + index).setEmoji("🔁").setLabel("Réouvrir").setStyle(ButtonStyle.Primary);
 
 const lootboxes = [];
 fs.readdir("./lootboxes/", (err, files) => {
@@ -15,28 +16,39 @@ fs.readdir("./lootboxes/", (err, files) => {
         lootboxes.push(lootbox);
     });
 });
+lootboxes.sort((a, b) => a.price - b.price);
 
-async function updateCasino() {
-    const channel = getChannel("casino");
+async function updateLootboxes() {
+    const channel = getChannel("lootboxes");
     if (!channel) return;
 
-    let messages = games.map((game, i) => ({
-        embeds: [new EmbedBuilder().setTitle(":hourglass_flowing_sand: | TIM€・" + game.name).setColor(COLORS.casino).setFooter(options.footer).setThumbnail(game.image).setFields([
-            { name: "Règles", value: game.rules, inline: true },
-            { name: "Gains", value: game.rewards, inline: true },
-            { name: "Nombre de joueur max", value: game.maxPlayers + " Joueur" + (game.maxPlayers > 1 ? "s" : ""), inline: true },
-            { name: "Mise", value: game.sameMise ? "Collective" : "Individuelle", inline: true },
+    let messages = lootboxes.map((lootbox, i) => ({
+        embeds: [new EmbedBuilder().setTitle(":hourglass_flowing_sand: | TIM€・" + lootbox.name).setColor(COLORS.casino).setFooter(options.footer).setImage("attachment://lb.png").setFields([
+            { name: "Prix", value: convertMonetary(lootbox.price) + " Limon Noir", inline: true },
+            { name: "Gains", value: lootbox.rewards.map(reward => `- **${reward.name}** : *${Math.round(reward.proba * 100)}%*`).join("\n"), inline: true }
         ])],
-        components: [new ActionRowBuilder().setComponents(new ButtonBuilder().setCustomId("play-" + i).setEmoji("🎫").setLabel("Ouvrir une table").setStyle(ButtonStyle.Primary))]
+        components: [new ActionRowBuilder().setComponents(new ButtonBuilder().setCustomId("open-" + i).setEmoji("🍀").setLabel("Ouvrir la boite").setStyle(ButtonStyle.Primary))],
+        files: [new AttachmentBuilder().setFile(lootbox.image).setName("lb.png")]
     }));
 
     const fetchedMessages = (await channel.messages.fetch({ limit: 50 })).filter(m => m.author.id == client.user.id);
     messages.forEach(m => {
-        const message = fetchedMessages.find(a => a.embeds[0]?.data.title.endsWith(m.embeds[0].data.title));
+        const message = fetchedMessages.find(a => a.embeds[0]?.data.title === m.embeds[0].data.title);
 
         if (message) message.edit(m).catch(console.error);
         else channel.send(m).catch(console.error);
     });
 }
 
-module.exports = { updateCasino, games, closeButton, closeButtonRow, replayButton };
+function pickupReward(rewards) {
+    let reward;
+    rewards.forEach((re, i, l) => {
+        if (reward) return;
+
+        if (Math.random() < re.proba) return reward = re;
+        else if (i == l.length - 1) return reward = re;
+    });
+    return reward;
+}
+
+module.exports = { updateLootboxes, lootboxes, closeButton, closeButtonRow, replayButton, pickupReward };

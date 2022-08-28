@@ -2,6 +2,7 @@ const { options } = require("../client");
 const { updateBank } = require("../modules/bank");
 const { updateCasino } = require("../modules/casino");
 const { updateLevel } = require("../modules/level");
+const { updateLootboxes } = require("../modules/lootbox");
 const { updateTicket } = require("../modules/ticket");
 const { config } = require("./config");
 
@@ -17,6 +18,7 @@ async function fastUpdate() {
         await updateTicket();
         await updateLevel();
         await updateCasino();
+        await updateLootboxes();
     } catch (error) {
         console.error(error);
     }

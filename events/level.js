@@ -3,7 +3,7 @@ const { COLORS, options } = require("../client");
 const User = require("../models/user.model");
 const { reduce } = require("../service/utils");
 const { createCanvas } = require("canvas");
-const { images } = require("..");
+const { images } = require("../client");
 
 module.exports = {
     name: "interactionCreate",

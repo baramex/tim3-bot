@@ -4,7 +4,7 @@ const User = require("../models/user.model");
 const { convertMonetary, durationTime } = require("../service/utils");
 const { createCanvas, registerFont } = require("canvas");
 const { getRole } = require("../service/config");
-const { images } = require("..");
+const { images } = require("../client");
 const { createReport } = require("../modules/ticket");
 
 registerFont("./ressources/fonts/Neoneon.otf", { family: "Neoneon" });
