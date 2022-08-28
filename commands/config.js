@@ -106,6 +106,7 @@ module.exports.run = async (interaction) => {
             else if (type_ == 1) {
                 let channels = guild.channels.cache.filter(a => channel.types.includes(a.type)).map(a => { return { label: "#" + a.name.substring(0, 23), description: ChannelType[a.type], value: a.id }; });
                 let list_options = [];
+                channels = channels.splice(0, 100);
                 while (channels.length > 0) {
                     list_options.push(channels.splice(0, 25));
                 }
