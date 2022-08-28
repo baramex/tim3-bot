@@ -98,6 +98,8 @@ function lobby(thread, name, game, member, mise, m) {
         if (game.sameMise) accepts.push(member);
         else accepts.push({ member, mise });
 
+        let isResolved = false;
+
         const miseTxt = "\n" + (game.sameMise ? mise ? "Mise: **" + convertMonetary(mise) + "** Limon Noir" : "Aucune mise." : "Mise personnelle.");
 
         const embed = new EmbedBuilder()
@@ -127,6 +129,7 @@ function lobby(thread, name, game, member, mise, m) {
 
             if (action === "start" && collected.member.id === member.id) {
                 collector.stop();
+                isResolved = true;
                 return res({ players: accepts, message });
             }
 
@@ -134,6 +137,7 @@ function lobby(thread, name, game, member, mise, m) {
                 if (accepts.some(a => (a.id || a.member.id) === collected.member.id)) return;
 
                 if (!game.sameMise) var m = await chooseBet(game, collected).catch(() => { });
+                if (isResolved) return;
 
                 if (!game.sameMise && !m && m !== 0) return;
 
@@ -146,6 +150,7 @@ function lobby(thread, name, game, member, mise, m) {
 
             if (accepts.length >= game.maxPlayers) {
                 collector.stop();
+                isResolved = true;
                 res({ players: accepts, message });
                 return;
             }
@@ -158,6 +163,7 @@ function lobby(thread, name, game, member, mise, m) {
         }).on("end", (collected, reason) => {
             if (reason == "time") {
                 removeCooldown(member.id, name);
+                isResolved = true;
                 res({ players: accepts, message });
             }
         });
