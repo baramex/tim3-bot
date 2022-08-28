@@ -15,8 +15,8 @@ fs.readdir("./lootboxes/", (err, files) => {
         const lootbox = require(`../lootboxes/${file}`);
         lootboxes.push(lootbox);
     });
+    lootboxes.sort((a, b) => a.price - b.price);
 });
-lootboxes.sort((a, b) => a.price - b.price);
 
 async function updateLootboxes() {
     const channel = getChannel("lootboxes");
