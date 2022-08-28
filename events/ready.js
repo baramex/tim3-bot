@@ -2,7 +2,7 @@ const { ActivityType } = require("discord.js");
 const Enmap = require("enmap");
 const { client, options } = require("../client");
 const fs = require("fs");
-const { fastUpdate } = require("../service/update");
+const { fastUpdate, update } = require("../service/update");
 const { invites } = require("../service/inviter");
 
 module.exports = {
