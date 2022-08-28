@@ -16,10 +16,7 @@ function init() {
         channel.send(messages[Math.floor(Math.random() * messages.length)]);
     });
 
-    const ruleFastUpdate = new RecurrenceRule();
-    ruleFastUpdate.minute = "*/10";
-
-    scheduleJob("fast-update", ruleFastUpdate, fastUpdate);
+    scheduleJob("fast-update", "*/1 * * * *", fastUpdate);
 }
 
 module.exports = { init };

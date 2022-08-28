@@ -12,23 +12,16 @@ registerFont("./ressources/fonts/Neoneon.otf", { family: "Neoneon" });
 const items = [
     {
         icon: "https://cdn-icons-png.flaticon.com/512/567/567491.png",
-        name: "Demande de Dossier Staff :card_box:",
+        name: "Accès Candidature Poste Staff :card_box:",
         type: "Divers",
         price: 1_000_000,
         description: "Le dossier staff permet de proposer sa candidature et d'avoir une chance d'intégrer l'équipe de modération du serveur TIM€.",
         available: async (member) => {
-            let role = getRole("dossier-staff");
-            if (!role) return false;
-            if (member.roles.cache.has(role.id)) return false;
-
             return true;
         },
-        reward: async (member) => {
-            let role = getRole("dossier-staff");
-            if (!role) throw new Error();
-
-            await member.roles.add(role);
-            return () => { };
+        reward: async (member, interaction) => {
+            const cha = await createReport(member, "Candidature Poste Staff", interaction, true);
+            return () => cha.send({ content: ":medal: Achat à **__1'000'000__** Limon Noir confirmé :white_check_mark:" });
         }
     },
     {

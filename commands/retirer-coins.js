@@ -1,5 +1,6 @@
 const { CommandInteraction, ApplicationCommandOptionType } = require("discord.js");
 const User = require("../models/user.model");
+const { convertMonetary } = require("../service/utils");
 
 /**
  * 
@@ -22,7 +23,7 @@ module.exports.run = async (interaction) => {
 
     await User.addCoins(member.id, -coins.value);
 
-    interaction.reply("**" + coins.value + "** Limon Noir ont été retirés à **" + member.user.tag + "**.");
+    interaction.reply("**" + convertMonetary(coins.value) + "** Limon Noir ont été retirés à **" + member.toString() + "**.");
 };
 
 module.exports.info = {

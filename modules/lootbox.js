@@ -25,7 +25,7 @@ async function updateLootboxes() {
     let messages = lootboxes.map((lootbox, i) => ({
         embeds: [new EmbedBuilder().setTitle(":hourglass_flowing_sand: | TIM€・" + lootbox.name).setColor(COLORS.casino).setFooter(options.footer).setImage("attachment://lb.png").setFields([
             { name: "Prix", value: convertMonetary(lootbox.price) + " Limon Noir", inline: true },
-            { name: "Gains", value: lootbox.rewards.map(reward => `- **${reward.name}** : *${Math.round(reward.proba * 100)}%*`).join("\n"), inline: true }
+            { name: "Gains", value: lootbox.rewards.map(reward => `- ${reward.name}`).join("\n"), inline: true }
         ])],
         components: [new ActionRowBuilder().setComponents(new ButtonBuilder().setCustomId("open-" + i).setEmoji("🍀").setLabel("Ouvrir la boite").setStyle(ButtonStyle.Primary))],
         files: [new AttachmentBuilder().setFile(lootbox.image).setName("lb.png")]

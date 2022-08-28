@@ -165,6 +165,10 @@ class User {
 
         return coins;
     }
+
+    static async wipe() {
+        await UserModel.updateMany({}, { $set: { coins: 1000, lvl: 1, exp: 0 } });
+    }
 }
 
 module.exports = User;
