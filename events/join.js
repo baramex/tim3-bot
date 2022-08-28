@@ -1,5 +1,6 @@
 const { options } = require("../client");
 const User = require("../models/user.model");
+const { getChannel } = require("../service/config");
 const { getInviter } = require("../service/inviter");
 
 module.exports = {
@@ -11,7 +12,7 @@ module.exports = {
             let inviter = await getInviter();
 
             if (inviter) {
-                const channel = options.guild.systemChannel;
+                const channel = getChannel("invite-tracker");
                 if (channel) channel.send(`<@${inviter}> a invité <@${member.id}> et a gagné **3000** Limon Noir !`);
 
                 await User.addCoins(inviter, 3000);

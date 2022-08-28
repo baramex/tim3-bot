@@ -7,6 +7,7 @@ const config = Lowdb(new FileSync("./config.json"));
 config.defaults({
     channels: [
         { event: "general", description: "Salon public de discussion générale, où seront envoyés les messages automatiques.", types: [ChannelType.GuildText] },
+        { event: "invite-tracker", description: "Salon où seront affichés les récompenses des invitations.", types: [ChannelType.GuildText] },
         { event: "banque", description: "Salon de la banque.", types: [ChannelType.GuildText] },
         { event: "niveau", description: "Salon du niveau/exp.", types: [ChannelType.GuildText] },
         { event: "casino", description: "Salon du casino", types: [ChannelType.GuildText] },
