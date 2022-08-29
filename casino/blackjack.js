@@ -39,7 +39,7 @@ module.exports = {
                 var desc;
                 bj = [...places.filter(a => a.pseudo && !a.lost && a.cards.length == 2 && totalVal(a.cards) == 21)];
 
-                if (bj.length > 0) desc = `${bj.map(a => "**" + a.pseudo + "** (" + convertMonetary(a.mise) + ")").join(", ")} ont fait blackjack et ${bj.length > 1 ? "ont" : "a"} remporté ${bj.map(a => "**" + convertMonetary(a.mise) + "**").join(", ")} Limon Noir.`;
+                if (bj.length > 0) desc = `${bj.map(a => "**" + a.pseudo + "** (" + convertMonetary(a.mise) + ")").join(", ")} ${bj.length > 1 ? "ont" : "a"} fait blackjack et ${bj.length > 1 ? "ont" : "a"} remporté ${bj.map(a => "**" + convertMonetary(Math.round(a.mise * 2.5)) + "**").join(", ")} Limon Noir.`;
 
                 if (mise) {
                     for (const place of bj) {
