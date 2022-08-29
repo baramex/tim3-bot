@@ -6,7 +6,7 @@ const messages = ["Vous pouvez Invitez vos Amis et Gagner 3000 Limon Noirs pour 
 
 function init() {
     const ruleMessage = new RecurrenceRule();
-    ruleMessage.hour = new Range(8, 21, 4);
+    ruleMessage.hour = new Range(7, 20, 3);
     ruleMessage.minute = 0;
 
     scheduleJob("send-message", ruleMessage, () => {
