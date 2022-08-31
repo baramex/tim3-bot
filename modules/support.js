@@ -25,6 +25,9 @@ async function updateSupport() {
 }
 
 async function getInvitation() {
+    const channel = getChannel("support");
+    if (!channel) return;
+
     return options.guild.vanityURLCode || (await options.guild.invites.fetch()).find(a => a.inviterId === client.user.id)?.code || (await options.guild.invites.create(channel, { maxAge: 0, maxUses: 0 })).code;
 }
 
