@@ -186,7 +186,7 @@ function getMinBet(member) {
 }
 
 function getMaxBet(member) {
-    return member.roles.cache.has(getRole("grade-timelapse")?.id) ? 30_000 : member.roles.cache.has(getRole("grade-timeless")?.id) ? 50_000 : 10_000;
+    return member.roles.cache.has(getRole("grade-timelapse")?.id) ? 500_000 : member.roles.cache.has(getRole("grade-timeless")?.id) ? 1_000_000 : 100_000;
 }
 
 function getCooldown(member) {

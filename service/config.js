@@ -12,11 +12,13 @@ config.defaults({
         { event: "niveau", description: "Salon du niveau/exp.", types: [ChannelType.GuildText] },
         { event: "casino", description: "Salon du casino", types: [ChannelType.GuildText] },
         { event: "lootboxes", description: "Salon des loot boxes", types: [ChannelType.GuildText] },
+        { event: "support", description: "Salon pour supporter le serveur (invitation).", types: [ChannelType.GuildText] },
         { event: "tickets", description: "Salon public pour ouvrir des tickets.", types: [ChannelType.GuildText] },
         { event: "tickets-parent", description: "Catégorie privée où seront disposées les tickets.", types: [ChannelType.GuildCategory] },
         { event: "archives-tickets-parent", description: "Catégorie privée où seront disposées les tickets archivés.", types: [ChannelType.GuildCategory] }
     ], roles: [
         { type: "membre", description: "Rôle membre." },
+        { type: "supporter", description: "Rôle supporter." },
         { type: "grade-timelapse", description: "Grade TimeLapse." },
         { type: "grade-timeless", description: "Grade TimeLess." },
     ],
