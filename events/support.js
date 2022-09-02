@@ -1,4 +1,4 @@
-const { getInvitation, isSupport } = require("../modules/support");
+const { isSupport } = require("../modules/support");
 const { getRole } = require("../service/config");
 
 module.exports = {

@@ -24,7 +24,7 @@ async function updateSupport() {
         else channel.send({ embeds: [embed], components: [row] });
     }
 
-    const role = getRole("support");
+    const role = getRole("supporter");
     if (role) {
         options.guild.members.cache.filter(a => a.roles.cache.has(role.id)).forEach(async member => {
             if (!await isSupport(member)) member.roles.remove(role);
@@ -34,9 +34,9 @@ async function updateSupport() {
 
 async function isSupport(member) {
     const invitation = await getInvitation().catch(console.error);
-    if(invitation) return;
+    if (!invitation) return;
     const prefix = ["/", ".gg/", "discord.gg/"].map(a => a + invitation);
-
+    
     return member.presence.activities.some(a => prefix.some(b => a.state.includes(b)));
 }
 
