@@ -28,7 +28,7 @@ module.exports = {
 
                 let c = guild.commands.cache.find(a => a.name == props.info.name);
                 if (c) {
-                    guild.commands.edit(c, { description: props.info.description, options: props.info.description || [] }).catch(console.error);
+                    guild.commands.edit(c, { description: props.info.description, options: props.info.options || [] }).catch(console.error);
                 }
                 else {
                     guild.commands.create({
