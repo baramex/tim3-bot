@@ -3,35 +3,38 @@ const { createReport } = require("../modules/ticket");
 
 module.exports = {
     name: "Loot Box Nuage",
-    price: 60_000_000,
+    price: 50_000_000,
     image: "./ressources/images/nuage.png",
     rewards: [
         {
-            name: "300 Millions de Limon Noir",
+            name: "150 Millions de Limon Noir",
             image: "https://assets.materialup.com/uploads/bcf6dd06-7117-424f-9a6e-4bb795c8fb4d/preview.png",
-            proba: 0.02,
-            run: (member) => User.addCoins(member.id, 300_000_000)
+            proba: 0.05,
+            run: (member) => User.addCoins(member.id, 150_000_000)
         },
         {
-            name: "un Nitro Discord 1 Mois",
-            image: "https://cdn1.epicgames.com/salesEvent/salesEvent/EGS_Discord_Nitro_2560x1440_withlogo_2560x1440-944994658df3b04d0c4940be832da19e",
-            proba: 0.05,
+            name: "Crunchyroll 1 Mois",
+            image: "http://store-images.s-microsoft.com/image/apps.44134.9007199266244356.8c8f8b98-231f-43f4-b251-7e5c4931b8a2.0a5801df-68bf-4fb5-888b-40f49a061c80",
+            proba: 0.20,
             run: async (member) => {
-                const cha = await createReport(member, "Achat Nitro Discord 1 Mois", interaction, true);
-                await cha.send({ content: ":medal: Gagné dans une lootbox :white_check_mark:" });
+                const cha = await createReport(member, "Achat Crunchyroll 1 Mois", interaction, true);
+                await cha.send({ content: ":medal: Reçu dans une lootbox :white_check_mark:" });
             }
         },
         {
-            name: "75 Millions de Limon Noir",
-            image: "https://assets.materialup.com/uploads/729ddd0b-3e18-47ea-a6c4-b9d4ae641f73/preview.png",
-            proba: 0.35,
-            run: (member) => User.addCoins(member.id, 75_000_000)
+            name: "Duolingo 1 Mois",
+            image: "https://play-lh.googleusercontent.com/vdwiqPJOIgqtRTUsv0juyn7ulQjF-fiFPwV4A20vcC25ugC0wFMQAD9CIsTf2pmkwsxQ",
+            proba: 0.25,
+            run: (member) => {
+                const cha = await createReport(member, "Achat Duolingo 1 Mois", interaction, true);
+                await cha.send({ content: ":medal: Reçu dans une lootbox :white_check_mark:" });
+            }
         },
         {
-            name: "25 Millions de Limon Noir",
+            name: "51 Millions de Limon Noir",
             image: "https://assets.materialup.com/uploads/27355340-a295-4c0f-88c1-8e45c92adad0/preview.png",
-            proba: 0.58,
-            run: (member) => User.addCoins(member.id, 25_000_000)
+            proba: 0.50,
+            run: (member) => User.addCoins(member.id, 51_000_000)
         },
     ].sort((a, b) => a.proba - b.proba)
 }

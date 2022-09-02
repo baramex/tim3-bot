@@ -7,33 +7,37 @@ module.exports = {
     image: "./ressources/images/soleil.png",
     rewards: [
         {
-            name: "un Grade Timelapse",
-            image: "https://images-ext-2.discordapp.net/external/4NMWSyMkPSXdNjgoWvfW9gNldf3txTalLSV7X77BAv8/https/les-raccourcis-clavier.fr/wp-content/uploads/2019/03/Emoji-foudre.png",
-            proba: 0.04,
-            run: (member) => {
-                let role = getRole("grade-timelapse");
-                if (!role) return;
-
-                return member.roles.add(role);
-            }
-        },
-        {
             name: "200 Millions de Limon Noir",
             image: "https://assets.materialup.com/uploads/bcf6dd06-7117-424f-9a6e-4bb795c8fb4d/preview.png",
-            proba: 0.11,
+            proba: 0.5,
             run: (member) => User.addCoins(member.id, 200_000_000)
         },
         {
-            name: "125 Millions de Limon Noir",
-            image: "https://assets.materialup.com/uploads/729ddd0b-3e18-47ea-a6c4-b9d4ae641f73/preview.png",
-            proba: 0.25,
-            run: (member) => User.addCoins(member.id, 125_000_000)
+            name: "NordVpn 1 Mois",
+            image: "https://media.wired.co.uk/photos/606d9bc4307b8f0b37c724bb/4:3/w_2664,h_1998,c_limit/wired-nordvpn-2.jpg",
+            proba: 0.20,
+            run: (member) => {
+                const cha = await createReport(member, "Achat NordVpn 1 Mois", interaction, true);
+                await cha.send({ content: ":medal: Reçu dans une lootbox :white_check_mark:" });
+            }
         },
         {
-            name: "50 Millions de Limon Noir",
-            image: "https://assets.materialup.com/uploads/27355340-a295-4c0f-88c1-8e45c92adad0/preview.png",
-            proba: 0.6,
-            run: (member) => User.addCoins(member.id, 50_000_000)
+            name: "Disney+ 1 Mois",
+            image: "https://lumiere-a.akamaihd.net/v1/images/disneyplus-introducing_mob_m_7d834c16.jpeg?region=0,0,800,600&width=768",
+            proba: 0.25,
+            run: (member) => {
+                const cha = await createReport(member, "Achat Disney+ 1 Mois", interaction, true);
+                await cha.send({ content: ":medal: Reçu dans une lootbox :white_check_mark:" });
+            }
+        },
+        {
+            name: "Salto 1 Mois",
+            image: "https://c0.lestechnophiles.com/www.numerama.com/wp-content/uploads/2020/10/salto-une-ok.jpg?resize=1024,551",
+            proba: 0.5,
+            run: (member) => {
+                const cha = await createReport(member, "Achat Salto 1 Mois", interaction, true);
+                await cha.send({ content: ":medal: Reçu dans une lootbox :white_check_mark:" });
+            }
         },
     ].sort((a, b) => a.proba - b.proba)
 }

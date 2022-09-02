@@ -3,7 +3,7 @@ const { getRole } = require("../service/config");
 
 module.exports = {
     name: "Loot Box Lune",
-    price: 500_000_000,
+    price: 250_000_000,
     image: "./ressources/images/lune.png",
     rewards: [
         {
@@ -18,22 +18,31 @@ module.exports = {
             }
         },
         {
-            name: "750 Millions de Limon Noir",
-            image: "https://assets.materialup.com/uploads/bcf6dd06-7117-424f-9a6e-4bb795c8fb4d/preview.png",
-            proba: 0.15,
-            run: (member) => User.addCoins(member.id, 750_000_000)
+            name: "Netflix 1 Mois",
+            image: "https://cdn.futura-sciences.com/buildsv6/images/wide1920/0/3/0/030dc01da7_50145928_netflix-logo.jpg",
+            proba: 0.20,
+            run: (member) => {
+                const cha = await createReport(member, "Achat Netflix 1 Mois", interaction, true);
+                await cha.send({ content: ":medal: Reçu dans une lootbox :white_check_mark:" });
+            }
         },
         {
-            name: "550 Millions de Limon Noir",
-            image: "https://assets.materialup.com/uploads/729ddd0b-3e18-47ea-a6c4-b9d4ae641f73/preview.png",
-            proba: 0.3,
-            run: (member) => User.addCoins(member.id, 550_000_000)
+            name: "Deezer 1 Mois",
+            image: "https://www.journaldugeek.com/content/uploads/2021/12/deezer.jpg",
+            proba: 0.25,
+            run: (member) => {
+                const cha = await createReport(member, "Achat Deezer 1 Mois", interaction, true);
+                await cha.send({ content: ":medal: Reçu dans une lootbox :white_check_mark:" });
+            }
         },
         {
-            name: "250 Millions de Limon Noir",
-            image: "https://assets.materialup.com/uploads/27355340-a295-4c0f-88c1-8e45c92adad0/preview.png",
+            name: "Adn 1 Mois",
+            image: "https://upload.wikimedia.org/wikipedia/commons/c/c7/ADN_Logo_2016.png",
             proba: 0.5,
-            run: (member) => User.addCoins(member.id, 250_000_000)
+            run: (member) => {
+                const cha = await createReport(member, "Achat Adn 1 Mois", interaction, true);
+                await cha.send({ content: ":medal: Reçu dans une lootbox :white_check_mark:" });
+            }
         },
     ].sort((a, b) => a.proba - b.proba)
 }

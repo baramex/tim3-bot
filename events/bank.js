@@ -79,16 +79,16 @@ const items = [
         }
     },
     {
-        icon: "https://cdn1.epicgames.com/salesEvent/salesEvent/EGS_Discord_Nitro_2560x1440_withlogo_2560x1440-944994658df3b04d0c4940be832da19e",
-        name: "Nitro Discord 1 Mois OU 5€",
+        icon: "https://www.digiseller.ru/preview/853328/p1_3242803_c21cab0b.jpeg",
+        name: "Nitro Classic 1 Mois OU 5€",
         type: "Divers",
         price: 250_000_000,
-        description: "Rien à dire de plus, un nitro discord d'une durée de 1 mois offert, si vous préférez le :money_with_wings: cash, il y a toujours les 5€.",
+        description: "Rien à dire de plus, un nitro classic d'une durée de 1 mois offert, si vous préférez le :money_with_wings: cash, il y a toujours les 5€.",
         available: async () => {
             return true;
         },
         reward: async (member, interaction) => {
-            const cha = await createReport(member, "Achat Nitro Discord 1 Mois OU 5€", interaction, true);
+            const cha = await createReport(member, "Achat Nitro Classic 1 Mois OU 5€", interaction, true);
             return () => cha.send({ content: ":medal: Achat à **__250'000'000__** Limon Noir confirmé :white_check_mark:" });
         }
     },

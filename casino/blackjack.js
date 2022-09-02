@@ -41,10 +41,8 @@ module.exports = {
 
                 if (bj.length > 0) desc = `${bj.map(a => "**" + a.pseudo + "** (" + convertMonetary(a.mise) + ")").join(", ")} ${bj.length > 1 ? "ont" : "a"} fait blackjack et ${bj.length > 1 ? "ont" : "a"} remporté ${bj.map(a => "**" + convertMonetary(Math.round(a.mise * 2.5)) + "**").join(", ")} Limon Noir.`;
 
-                if (mise) {
-                    for (const place of bj) {
-                        await User.addCoins(place.id, Math.round(place.mise * 2.5));
-                    }
+                for (const place of bj) {
+                    if (place.mise) await User.addCoins(place.id, Math.round(place.mise * 2.5));
                 }
             }
 
@@ -55,7 +53,7 @@ module.exports = {
         else {
             const pushs = places.filter(a => a.type == "player" && totalVal(a.cards) == 21);
             for (const i in pushs) {
-                await User.addCoins(pushs[i].id, mise);
+                if (pushs[i].mise) await User.addCoins(pushs[i].id, pushs[i].mise);
             }
             return reply(places, message, 0, 0, pushs.length > 0 ? `Le croupier a fait blackjack mais ${pushs.map(a => `**${a.pseudo}** (${a.mise})`).join(", ")} ${pushs.length == 1 ? "a" : "ont"} récupéré ${pushs.length == 1 ? "sa" : "leur"} mise de ${pushs.map(a => convertMonetary(a.mise)).join(", ")} Limon Noir.` : "Le croupier vous a tous éclaté.", host, game);
         }
