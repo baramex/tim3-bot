@@ -25,7 +25,7 @@ module.exports = {
             name: "Duolingo 1 Mois",
             image: "https://play-lh.googleusercontent.com/vdwiqPJOIgqtRTUsv0juyn7ulQjF-fiFPwV4A20vcC25ugC0wFMQAD9CIsTf2pmkwsxQ",
             proba: 0.25,
-            run: (member) => {
+            run: async (member) => {
                 const cha = await createReport(member, "Achat Duolingo 1 Mois", interaction, true);
                 await cha.send({ content: ":medal: Reçu dans une lootbox :white_check_mark:" });
             }

@@ -31,7 +31,7 @@ module.exports = {
             name: "Spotify 1 Mois",
             image: "https://www.scdn.co/i/_global/open-graph-default.png",
             proba: 0.25,
-            run: (member) => {
+            run: async (member) => {
                 const cha = await createReport(member, "Achat Spotify 1 Mois", interaction, true);
                 await cha.send({ content: ":medal: Reçu dans une lootbox :white_check_mark:" });
             }
