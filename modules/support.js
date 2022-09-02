@@ -12,7 +12,7 @@ async function updateSupport() {
             .setColor(COLORS.casino)
             .setTitle(":hourglass_flowing_sand: | TIM€・Portez nos Couleurs !")
             .setFooter(options.footer)
-            .setDescription(`Vous pouvez encore plus montrer votre Soutien à notre Serveur en ajoutant à votre profil le statut :\n\n/${invitation}\n.gg/${invitation}\ndiscord.gg/${invitation}\n\nCe gestes vous accordera des récompenses de Limon Supplémentaires ainsi qu'un Grade Exclusif !`);
+            .setDescription(`Vous pouvez encore plus montrer votre Soutien à notre Serveur en ajoutant à votre profil le statut :\n\n/${invitation}\n.gg/${invitation}\ndiscord.gg/${invitation}\n\nCe geste vous accorderas un Grade Exclusif !`);
 
         const row = new ActionRowBuilder()
             .setComponents(
