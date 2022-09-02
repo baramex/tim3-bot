@@ -26,14 +26,18 @@ async function updateSupport() {
 
     const role = getRole("support");
     if (role) {
-        options.guild.members.cache.filter(a => a.roles.cache.has(role.id)).forEach(member => {
-            if (!isSupport(member)) member.roles.remove(role);
+        options.guild.members.cache.filter(a => a.roles.cache.has(role.id)).forEach(async member => {
+            if (!await isSupport(member)) member.roles.remove(role);
         });
     }
 }
 
-function isSupport(member) {
-    return interaction.member.presence.activities.some(a => prefix.some(b => a.state.includes(b)));
+async function isSupport(member) {
+    const invitation = await getInvitation().catch(console.error);
+    if(invitation) return;
+    const prefix = ["/", ".gg/", "discord.gg/"].map(a => a + invitation);
+
+    return member.presence.activities.some(a => prefix.some(b => a.state.includes(b)));
 }
 
 async function getInvitation() {
@@ -43,4 +47,4 @@ async function getInvitation() {
     return options.guild.vanityURLCode || (await options.guild.invites.fetch()).find(a => a.inviterId === client.user.id)?.code || (await options.guild.invites.create(channel, { maxAge: 0, maxUses: 0 })).code;
 }
 
-module.exports = { updateSupport, getInvitation };
+module.exports = { updateSupport, getInvitation, isSupport };

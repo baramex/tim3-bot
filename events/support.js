@@ -1,4 +1,4 @@
-const { getInvitation } = require("../modules/support");
+const { getInvitation, isSupport } = require("../modules/support");
 const { getRole } = require("../service/config");
 
 module.exports = {
@@ -16,10 +16,7 @@ module.exports = {
 
             if (interaction.member.roles.cache.has(role.id)) return interaction.reply({ content: "Vous portez déjà notre couleur !", ephemeral: true });
 
-            const invitation = await getInvitation();
-            const prefix = ["/", ".gg/", "discord.gg/"].map(a => a + invitation);
-
-            if (isSupport(interaction.member)) {
+            if (await isSupport(interaction.member)) {
                 if (role) await interaction.member.roles.add(role);
 
                 return interaction.reply({ content: "Merci pour votre soutiens !!! Vous avez reçu le rôle " + role.toString() + ".", ephemeral: true });
