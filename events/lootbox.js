@@ -54,7 +54,7 @@ module.exports = {
                 const reward = pickupReward(lootbox.rewards);
 
                 await message.edit({ embeds: [data.embeds[0].setFields({ name: "Prix", value: `${convertMonetary(lootbox.price)} Limon Noirs` }).setDescription(":tada: :gift: Vous remportez **" + reward.name + "** avec " + Math.round(reward.proba * 100) + "% de chance !").setImage("attachment://lb.png").setThumbnail("attachment://reward.png")], files: [new AttachmentBuilder(reward.image, { name: "reward.png" }), new AttachmentBuilder(lootbox.image, { name: "lb.png" })], components: [new ActionRowBuilder().setComponents(replayButton(lootboxes.indexOf(lootbox)), closeButton(interaction.member.id))] }).catch(console.error);
-                await reward.run(interaction.member).catch(console.error);
+                await reward.run(interaction.member, interaction).catch(console.error);
             }, 3000);
         }
         else if (interaction.customId.startsWith("lb-close-")) {

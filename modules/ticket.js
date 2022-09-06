@@ -39,7 +39,7 @@ async function createReport(member, type, interaction, forceSize = false) {
     if (channels.size > 0) {
         var memberChannels = channels.filter(a => a.name.split("-")[1] == member.id);
         if (memberChannels.size >= 2 && !forceSize) {
-            return interaction.reply({ content: ":x: Vous ne pouvez pas créer plus de 2 tickets !", ephemeral: true });
+            return interaction.replied ? interaction.followUp({ content: ":x: Vous ne pouvez pas créer plus de 2 tickets !", ephemeral: true }) : interaction.reply({ content: ":x: Vous ne pouvez pas créer plus de 2 tickets !", ephemeral: true });
         }
 
         n = Number(channels.sort((a, b) => Number(b.name.split("-")[0]) - Number(a.name.split("-")[0])).first().name.split("-")[0]) + 1;
@@ -64,7 +64,8 @@ async function createReport(member, type, interaction, forceSize = false) {
             .setEmoji("🕒"))]
     });
 
-    await interaction.reply({ content: ":white_check_mark: Ticket créé <#" + cha.id + "> !", ephemeral: true }).catch(console.error);
+    
+    (interaction.replied || interaction.deferred) ? await interaction.followUp({ content: ":white_check_mark: Ticket créé <#" + cha.id + "> !", ephemeral: true }).catch(console.error) : await interaction.reply({ content: ":white_check_mark: Ticket créé <#" + cha.id + "> !", ephemeral: true }).catch(console.error);
     if (interaction.message && interaction.message.type === MessageType.Default) await interaction.message.edit({}).catch(console.error);
 
     return cha;

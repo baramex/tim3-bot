@@ -11,7 +11,7 @@ module.exports = {
             name: "un Nitro Discord 1 An",
             image: "https://cdn1.epicgames.com/salesEvent/salesEvent/EGS_Discord_Nitro_2560x1440_withlogo_2560x1440-944994658df3b04d0c4940be832da19e",
             proba: 0.05,
-            run: async (member) => {
+            run: async (member, interaction) => {
                 const cha = await createReport(member, "Achat Nitro Discord 1 An", interaction, true);
                 await cha.send({ content: ":medal: Reçu dans une lootbox :white_check_mark:" });
             }
@@ -31,7 +31,7 @@ module.exports = {
             name: "Spotify 1 Mois",
             image: "https://www.scdn.co/i/_global/open-graph-default.png",
             proba: 0.25,
-            run: async (member) => {
+            run: async (member, interaction) => {
                 const cha = await createReport(member, "Achat Spotify 1 Mois", interaction, true);
                 await cha.send({ content: ":medal: Reçu dans une lootbox :white_check_mark:" });
             }

@@ -16,7 +16,7 @@ module.exports = {
             name: "Crunchyroll 1 Mois",
             image: "http://store-images.s-microsoft.com/image/apps.44134.9007199266244356.8c8f8b98-231f-43f4-b251-7e5c4931b8a2.0a5801df-68bf-4fb5-888b-40f49a061c80",
             proba: 0.20,
-            run: async (member) => {
+            run: async (member, interaction) => {
                 const cha = await createReport(member, "Achat Crunchyroll 1 Mois", interaction, true);
                 await cha.send({ content: ":medal: Reçu dans une lootbox :white_check_mark:" });
             }
@@ -25,7 +25,7 @@ module.exports = {
             name: "Duolingo 1 Mois",
             image: "https://play-lh.googleusercontent.com/vdwiqPJOIgqtRTUsv0juyn7ulQjF-fiFPwV4A20vcC25ugC0wFMQAD9CIsTf2pmkwsxQ",
             proba: 0.25,
-            run: async (member) => {
+            run: async (member, interaction) => {
                 const cha = await createReport(member, "Achat Duolingo 1 Mois", interaction, true);
                 await cha.send({ content: ":medal: Reçu dans une lootbox :white_check_mark:" });
             }
