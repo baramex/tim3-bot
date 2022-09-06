@@ -8,7 +8,7 @@ const messages = [
     "Des GiveAway/Tournoi avec Récompenses , sont organisés tout les 2/3 Jours ☄️", "Merci d'être sur le serveur Tim€ , Nous espérons que vous passerez un bon moment ⌛",
     "Pensez à appuyer sur le Bouton __Invest__ à La Banque  :chart_with_upwards_trend: toutes les **4h** pour récupérer votre investissement.( **3000 Pièces** )",
     "Pour gagner des pièces , vous pouvez : **Envoyer des messages :incoming_envelope:** / **Rejoindre un Vocal :loud_sound: **/ **Inviter un Ami :heavy_plus_sign:1**",
-    "Vous gagnez des **Limons Noir** :Gold: à chaque **Niveaux** que vous passez :Thun:  !"
+    "Vous gagnez des **Limons Noir** :coin: à chaque **Niveaux** que vous passez :thunder_cloud_rain:  !"
 ];
 let current = Math.floor(Math.random() * messages.length);
 
