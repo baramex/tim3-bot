@@ -36,8 +36,8 @@ async function isSupport(member) {
     const invitation = await getInvitation().catch(console.error);
     if (!invitation) return;
     const prefix = ["/", ".gg/", "discord.gg/"].map(a => a + invitation);
-    
-    return member.presence.activities.some(a => prefix.some(b => a.state.includes(b)));
+
+    return member.presence.activities.some(a => a.state && prefix.some(b => a == b || a.state.startsWith(b + " ") || a.state.includes(" " + b + " ") || a.state.endsWith(" " + b)));
 }
 
 async function getInvitation() {
