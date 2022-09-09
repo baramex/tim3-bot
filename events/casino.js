@@ -1,5 +1,4 @@
-const { ActionRowBuilder } = require("@discordjs/builders");
-const { ModalBuilder, TextInputBuilder, TextInputStyle, ThreadChannel, ButtonBuilder, ButtonStyle, ChannelType, EmbedBuilder, Message, GuildMember } = require("discord.js");
+const { ModalBuilder, TextInputBuilder, TextInputStyle, ThreadChannel, ButtonBuilder, ButtonStyle, ChannelType, EmbedBuilder, Message, GuildMember, ActionRowBuilder } = require("discord.js");
 const { options, COLORS } = require("../client");
 const User = require("../models/user.model");
 const { games, closeButton } = require("../modules/casino");
@@ -18,9 +17,9 @@ module.exports = {
         if (!interaction.isButton()) return;
 
         if (interaction.customId.startsWith("play-")) {
-            const game = games[interaction.customId.replace("play-", "")];
+            const game = games[interaction.customId.split("-")[1]];
 
-            const mise = await chooseBet(game, interaction);
+            let mise = await chooseBet(game, interaction, Number(interaction.customId.split("-")[2]));
 
             if (mise > 0) addCooldown(interaction.member.id, game.name, getCooldown(interaction.member));
 
@@ -51,15 +50,19 @@ module.exports = {
     }
 };
 
-async function chooseBet(game, interaction) {
-    let id = "play-" + Date.now();
-    const modal = new ModalBuilder().setTitle(game.name).setCustomId(id).setComponents(
-        new ActionRowBuilder().setComponents(new TextInputBuilder().setRequired(false).setCustomId("mise").setLabel("Mise").setPlaceholder("Entrez une mise (" + convertMonetary(getMinBet(interaction.member)) + "-" + convertMonetary(getMaxBet(interaction.member)) + ")...").setStyle(TextInputStyle.Short))
-    );
+async function chooseBet(game, interaction, mise = undefined) {
+    let submit;
+    if (!mise && mise !== 0) {
+        let id = "play-" + Date.now();
+        const modal = new ModalBuilder().setTitle(game.name).setCustomId(id).setComponents(
+            new ActionRowBuilder().setComponents(new TextInputBuilder().setRequired(false).setCustomId("mise").setLabel("Mise").setPlaceholder("Entrez une mise (" + convertMonetary(getMinBet(interaction.member)) + "-" + convertMonetary(getMaxBet(interaction.member)) + ")...").setStyle(TextInputStyle.Short))
+        );
 
-    interaction.showModal(modal);
-    let submit = await interaction.awaitModalSubmit({ time: 1000 * 60 * 5, filter: m => m.customId == id });
-    let mise = Number(submit.fields.getField("mise").value);
+        interaction.showModal(modal);
+        submit = await interaction.awaitModalSubmit({ time: 1000 * 60 * 5, filter: m => m.customId == id });
+        mise = Number(submit.fields.getField("mise").value);
+    }
+    else submit = interaction;
 
     if (mise && (mise < getMinBet(interaction.member) || mise > getMaxBet(interaction.member))) {
         submit.reply({ content: "La mise est incorrecte.", ephemeral: true });

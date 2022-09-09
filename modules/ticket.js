@@ -64,7 +64,6 @@ async function createReport(member, type, interaction, forceSize = false) {
             .setEmoji("🕒"))]
     });
 
-    
     (interaction.replied || interaction.deferred) ? await interaction.followUp({ content: ":white_check_mark: Ticket créé <#" + cha.id + "> !", ephemeral: true }).catch(console.error) : await interaction.reply({ content: ":white_check_mark: Ticket créé <#" + cha.id + "> !", ephemeral: true }).catch(console.error);
     if (interaction.message && interaction.message.type === MessageType.Default) await interaction.message.edit({}).catch(console.error);
 

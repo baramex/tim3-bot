@@ -1,9 +1,9 @@
 const { createCanvas } = require("canvas");
-const { ButtonStyle, Colors, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ThreadChannel, ComponentType, AttachmentBuilder } = require("discord.js");
+const { ButtonStyle, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ThreadChannel, ComponentType, AttachmentBuilder } = require("discord.js");
 const { images } = require("../client");
 const { COLORS, options } = require("../client");
 const User = require("../models/user.model");
-const { closeButton, closeButtonRow, games, replayButton } = require("../modules/casino");
+const { closeButton, games, replayButton, replaySameBetButton } = require("../modules/casino");
 const { convertMonetary, reduce } = require("../service/utils");
 
 module.exports = {
@@ -20,6 +20,7 @@ module.exports = {
      * @param {*} mise 
      */
     run: async (channel, host, players, mise, message, game) => {
+        const gameId = games.indexOf(game);
         const CARD_COLORS = {
             CLUBS: { image: images.clubs, color: "#212121" },
             DIAMONDS: { image: images.diamonds, color: "#E72F2F" },
@@ -47,7 +48,7 @@ module.exports = {
             }
 
             croupier.cards[1].type = "reversed";
-            await reply(places, message, turn, splitturn, desc, host, game);
+            await reply(places, message, turn, splitturn, desc, host, game, mise);
             if (turn == 0) return;
         }
         else {
@@ -55,7 +56,7 @@ module.exports = {
             for (const i in pushs) {
                 if (pushs[i].mise) await User.addCoins(pushs[i].id, pushs[i].mise);
             }
-            return reply(places, message, 0, 0, pushs.length > 0 ? `Le croupier a fait blackjack mais ${pushs.map(a => `**${a.pseudo}** (${a.mise})`).join(", ")} ${pushs.length == 1 ? "a" : "ont"} récupéré ${pushs.length == 1 ? "sa" : "leur"} mise de ${pushs.map(a => convertMonetary(a.mise)).join(", ")} Limon Noir.` : "Le croupier vous a tous éclaté.", host, game);
+            return reply(places, message, 0, 0, pushs.length > 0 ? `Le croupier a fait blackjack mais ${pushs.map(a => `**${a.pseudo}** (${a.mise})`).join(", ")} ${pushs.length == 1 ? "a" : "ont"} récupéré ${pushs.length == 1 ? "sa" : "leur"} mise de ${pushs.map(a => convertMonetary(a.mise)).join(", ")} Limon Noir.` : "Le croupier vous a tous éclaté.", host, game, mise);
         }
 
         const collector = message.createMessageComponentCollector({ filter: int => int.isButton() && players.some(a => a.member.id == int.user.id), time: 1000 * 60 * 10 });
@@ -152,11 +153,11 @@ module.exports = {
                 collector.stop();
             }
 
-            await reply(places, message, turn, splitturn, desc, host, game);
+            await reply(places, message, turn, splitturn, desc, host, game, mise);
         }).on("end", (collected, reason) => {
             if (reason == "time") {
                 bot.removeCommandeCooldown(interaction.member, interaction.commandName);
-                message.edit({ content: "Interaction terminée, 10 minutes écoulées", components: [new ActionRowBuilder().setComponents(replayButton(games.indexOf(game)), closeButton(host.id))] }).catch(console.error);
+                message.edit({ content: "Interaction terminée, 10 minutes écoulées", components: [new ActionRowBuilder().setComponents(replaySameBetButton(gameId, mise), replayButton(gameId), closeButton(host.id))] }).catch(console.error);
             }
         });
     }
@@ -191,7 +192,7 @@ function totalVal(cards, split = 0) {
     return val;
 }
 
-async function reply(places, message, turn, splitturn, description, host, game) {
+async function reply(places, message, turn, splitturn, description, host, game, mise) {
     const canvas = generateGame(places, turn, splitturn);
 
     if (turn !== 0) {
@@ -212,7 +213,8 @@ async function reply(places, message, turn, splitturn, description, host, game) 
     if (description) embed.setDescription(description);
     else if (turn) embed.setDescription("Au tour de **" + places[turn]?.pseudo + "**" + (isSplit(places[turn]?.cards) ? [", première", ", seconde"][splitturn] + " main" : "") + ".");
 
-    const obj = { embeds: [embed], files: [new AttachmentBuilder(canvas.toBuffer(), { name: "bj.png" })], components: row ? [row] : [new ActionRowBuilder().setComponents(replayButton(games.indexOf(game)), closeButton(host.id))] };
+    const gameId = games.indexOf(game);
+    const obj = { embeds: [embed], files: [new AttachmentBuilder(canvas.toBuffer(), { name: "bj.png" })], components: row ? [row] : [new ActionRowBuilder().setComponents(replaySameBetButton(gameId, mise), replayButton(gameId), closeButton(host.id))] };
     message.edit(obj);
 }
 

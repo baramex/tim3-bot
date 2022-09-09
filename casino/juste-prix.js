@@ -1,7 +1,7 @@
-const { ButtonStyle, Colors, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ThreadChannel, ComponentType, GuildMember, ModalBuilder, TextInputBuilder, TextInputStyle } = require("discord.js");
+const { ButtonStyle, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ThreadChannel, ComponentType, GuildMember, ModalBuilder, TextInputBuilder, TextInputStyle } = require("discord.js");
 const { COLORS, options } = require("../client");
 const User = require("../models/user.model");
-const { closeButton, closeButtonRow, games, replayButton } = require("../modules/casino");
+const { closeButton, games, replayButton, replaySameBetButton } = require("../modules/casino");
 const { convertMonetary } = require("../service/utils");
 
 module.exports = {
@@ -19,6 +19,7 @@ module.exports = {
      * @param {number} mise 
      */
     run: async (channel, host, players, mise, m, game) => {
+        const gameId = games.indexOf(game);
         let embed = new EmbedBuilder()
             .setColor(COLORS.casino)
             .setTitle(":hourglass_flowing_sand: | TIM€・Juste Prix")
@@ -75,7 +76,7 @@ module.exports = {
             embed.setColor(COLORS.error);
         }
 
-        message.edit({ embeds: [embed], components: [new ActionRowBuilder().setComponents(replayButton(games.indexOf(game)), closeButton(host.id))] });
+        message.edit({ embeds: [embed], components: [new ActionRowBuilder().setComponents(replaySameBetButton(gameId, mise), replayButton(gameId), closeButton(host.id))] });
     }
 };
 

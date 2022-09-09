@@ -1,7 +1,7 @@
-const { ButtonStyle, Colors, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ThreadChannel, ComponentType } = require("discord.js");
+const { ButtonStyle, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ThreadChannel, ComponentType } = require("discord.js");
 const { COLORS, options } = require("../client");
 const User = require("../models/user.model");
-const { closeButton, closeButtonRow, replayButton, games } = require("../modules/casino");
+const { closeButton, replayButton, games, replaySameBetButton } = require("../modules/casino");
 const { convertMonetary } = require("../service/utils");
 
 module.exports = {
@@ -18,6 +18,7 @@ module.exports = {
      * @param {*} mise 
      */
     run: async (channel, host, players, mise, m, game) => {
+        const gameId = games.indexOf(game);
         let embed = new EmbedBuilder()
             .setColor(COLORS.casino)
             .setTitle(":hourglass_flowing_sand: | TIM€・Pile ou Face")
@@ -55,7 +56,7 @@ module.exports = {
 
             if (won && mise) await User.addCoins(host.id, mise * 2).catch(console.log);
 
-            await message.edit({ embeds: [embed], files: ['./ressources/images/coin ' + face + '.png'], components: [new ActionRowBuilder().setComponents(replayButton(games.indexOf(game)), closeButton(host.id))] }).catch(console.log);
+            await message.edit({ embeds: [embed], files: ['./ressources/images/coin ' + face + '.png'], components: [new ActionRowBuilder().setComponents(replaySameBetButton(gameId, mise), replayButton(gameId), closeButton(host.id))] }).catch(console.log);
         }, 1000);
     }
 };

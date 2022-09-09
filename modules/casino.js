@@ -6,6 +6,7 @@ const fs = require("fs");
 const closeButton = (id) => new ButtonBuilder().setCustomId("casino-close-" + id).setEmoji("✖️").setLabel("Fermer").setStyle(ButtonStyle.Danger);
 const closeButtonRow = (id) => new ActionRowBuilder().setComponents(closeButton(id));
 const replayButton = (index) => new ButtonBuilder().setCustomId("play-" + index).setEmoji("🔁").setLabel("Rejouer").setStyle(ButtonStyle.Primary);
+const replaySameBetButton = (index, bet) => new ButtonBuilder().setCustomId("play-" + index + "-" + bet).setEmoji("🔁").setLabel("Rejouer avec la même mise").setStyle(ButtonStyle.Primary);
 
 const games = [];
 fs.readdir("./casino/", (err, files) => {
@@ -39,4 +40,4 @@ async function updateCasino() {
     });
 }
 
-module.exports = { updateCasino, games, closeButton, closeButtonRow, replayButton };
+module.exports = { updateCasino, games, closeButton, closeButtonRow, replayButton, replaySameBetButton };

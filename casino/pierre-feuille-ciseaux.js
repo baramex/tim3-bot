@@ -1,9 +1,9 @@
 const { createCanvas } = require("canvas");
-const { ButtonStyle, Colors, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ThreadChannel, ComponentType, AttachmentBuilder } = require("discord.js");
+const { ButtonStyle, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ThreadChannel, ComponentType, AttachmentBuilder } = require("discord.js");
 const { images } = require("../client");
 const { COLORS, options } = require("../client");
 const User = require("../models/user.model");
-const { closeButton, closeButtonRow, replayButton, games } = require("../modules/casino");
+const { closeButton, replayButton, games, replaySameBetButton } = require("../modules/casino");
 const { convertMonetary } = require("../service/utils");
 
 module.exports = {
@@ -20,6 +20,7 @@ module.exports = {
      * @param {*} mise 
      */
     run: async (channel, host, players, mise, message, game) => {
+        const gameId = games.indexOf(game);
         let embed = new EmbedBuilder()
             .setColor(COLORS.casino)
             .setTitle(":hourglass_flowing_sand: | TIM€・Pierre Feuille Ciseaux")
@@ -61,7 +62,7 @@ module.exports = {
         embed.setImage("attachment://pfc.png");
 
         const attach = new AttachmentBuilder(generateCanvas(players, host, winner, signs).toBuffer(), { name: "pfc.png" });
-        await message.edit({ embeds: [embed], components: [new ActionRowBuilder().setComponents(replayButton(games.indexOf(game)), closeButton(host.id))], files: [attach] });
+        await message.edit({ embeds: [embed], components: [new ActionRowBuilder().setComponents(replaySameBetButton(gameId, mise), replayButton(gameId), closeButton(host.id))], files: [attach] });
     }
 };
 
