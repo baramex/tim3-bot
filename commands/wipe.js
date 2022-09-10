@@ -1,6 +1,5 @@
-const { CommandInteraction, ApplicationCommandOptionType, ActionRowBuilder, ButtonBuilder, ButtonStyle, ComponentType } = require("discord.js");
+const { CommandInteraction, ActionRowBuilder, ButtonBuilder, ButtonStyle, ComponentType, PermissionsBitField } = require("discord.js");
 const User = require("../models/user.model");
-const { convertMonetary } = require("../service/utils");
 
 /**
  * 
@@ -10,7 +9,7 @@ const { convertMonetary } = require("../service/utils");
 module.exports.run = async (interaction) => {
     let modo = interaction.member;
 
-    if (!modo.permissions.has("ADMINISTRATOR")) {
+    if (!modo.permissions.has(PermissionsBitField.Flags.Administrator)) {
         throw new Error("Vous n'avez pas les permissions pour faire ça !");
     }
 

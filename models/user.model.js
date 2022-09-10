@@ -11,6 +11,8 @@ const userSchema = new Schema({
     date: { type: Date, default: new Date() }
 });
 
+const rewards = [1_000_000, 2_000_000, 3_000_000, 4_000_000, 5_000_000, 75_000_000, 100_000_000, 200_000_000, 400_000_000, 500_000_000];
+
 userSchema.pre("save", async function (next) {
     var doc = await UserModel.findOne({ id: this.id }).catch(console.error);
     if (!doc) return next();
@@ -76,9 +78,9 @@ class User {
     }
 
     static getReward(oldLevel, newLevel) {
-        let r = 0
+        let r = 0;
         for (let i = oldLevel + 1; i <= newLevel; i++) {
-            r += i % 10 == 0 ? 10000 : 1000;
+            r += i % 10 == 0 ? i % 100 == 0 ? rewards[i / 100 - 1] : 10000 : 1000;
         }
         return r;
     }

@@ -1,8 +1,9 @@
-const { EmbedBuilder, CommandInteraction, ButtonBuilder, ActionRowBuilder, ChannelType, SelectMenuBuilder, ButtonStyle, Message, ApplicationCommandOptionType, ModalBuilder, TextInputBuilder, TextInputStyle } = require("discord.js");
+const { EmbedBuilder, CommandInteraction, ButtonBuilder, ActionRowBuilder, ChannelType, SelectMenuBuilder, ButtonStyle, Message, ApplicationCommandOptionType, ModalBuilder, TextInputBuilder, TextInputStyle, PermissionsBitField } = require("discord.js");
 const { COLORS, options } = require("../client");
 const { updateBank } = require("../modules/bank");
 const { updateLevel } = require("../modules/level");
 const { updateLootboxes } = require("../modules/lootbox");
+const { updateSellix } = require("../modules/sellix");
 const { updateSupport } = require("../modules/support");
 const { updateTicket } = require("../modules/ticket");
 const { config } = require("../service/config");
@@ -17,7 +18,7 @@ module.exports.run = async (interaction) => {
     let type = interaction.options.getSubcommand(true);
     let { footer, guild } = options;
 
-    if (!modo.permissions.has("ADMINISTRATOR")) {
+    if (!modo.permissions.has(PermissionsBitField.Flags.Administrator)) {
         throw new Error("Vous n'avez pas les permissions pour faire ça !");
     }
 
@@ -239,6 +240,7 @@ module.exports.run = async (interaction) => {
                         case "niveau": await updateLevel().catch(console.error); break;
                         case "loot-boxes": await updateLootboxes().catch(console.error); break;
                         case "support": await updateSupport().catch(console.error); break;
+                        case "sellix": await updateSellix().catch(console.error); break;
                     }
                 }
 

@@ -54,9 +54,9 @@ module.exports = {
 
             embed.setColor(won ? COLORS.valid : COLORS.error);
 
-            if (won && mise) await User.addCoins(host.id, mise * 2).catch(console.log);
+            if (won && mise) await User.addCoins(host.id, mise * 2).catch(console.error);
 
-            await message.edit({ embeds: [embed], files: ['./ressources/images/coin ' + face + '.png'], components: [new ActionRowBuilder().setComponents(replaySameBetButton(gameId, mise), replayButton(gameId), closeButton(host.id))] }).catch(console.log);
+            await message.edit({ embeds: [embed], files: ['./ressources/images/coin ' + face + '.png'], components: [new ActionRowBuilder().setComponents(replaySameBetButton(gameId, mise), replayButton(gameId), closeButton(host.id))] }).catch(console.error);
         }, 1000);
     }
 };
