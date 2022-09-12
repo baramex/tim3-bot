@@ -16,8 +16,6 @@ module.exports = {
     run: async (interaction) => {
         if (!interaction.isButton()) return;
 
-        interaction.deferReply({ ephemeral: true });
-
         if (interaction.customId.startsWith("play-")) {
             const game = games[interaction.customId.split("-")[1]];
 
