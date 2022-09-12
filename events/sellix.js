@@ -19,7 +19,7 @@ module.exports = {
             const modal = new ModalBuilder()
                 .setComponents(new ActionRowBuilder().addComponents(new TextInputBuilder().setCustomId("id").setLabel("L'id de la commande (par email)").setMinLength(24).setMaxLength(24).setRequired(true).setStyle(TextInputStyle.Short).setPlaceholder("123abc-12345abcde-123abc")))
                 .setCustomId(modalId)
-                .setTitle("Validation achat");
+                .setTitle("Validation soutien");
 
             interaction.showModal(modal);
 
