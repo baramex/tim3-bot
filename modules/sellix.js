@@ -92,7 +92,7 @@ async function updateSellix() {
 
     const row = new ActionRowBuilder()
         .setComponents(
-            new ButtonBuilder().setCustomId("purchase").setEmoji("🛍️").setLabel("Valider un achat").setStyle(ButtonStyle.Success),
+            new ButtonBuilder().setCustomId("purchase").setEmoji("🛍️").setLabel("Valider un soutiens").setStyle(ButtonStyle.Success),
         );
 
     const message = (await channel.messages.fetch({ limit: 5 })).find(m => m.author.id == client.user.id);
