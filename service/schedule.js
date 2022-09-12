@@ -27,7 +27,7 @@ function init() {
     });
 
     scheduleJob("fast-update", "*/5 * * * *", fastUpdate);
-    scheduleJob("fast-update", "* */3 * * *", update);
+    scheduleJob("update", "* */3 * * *", update);
 }
 
 module.exports = { init };
