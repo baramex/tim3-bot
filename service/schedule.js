@@ -3,7 +3,7 @@ const { getChannel } = require("./config");
 const { fastUpdate, update } = require("./update");
 
 const messages = [
-    "Vous pouvez Invitez vos Amis et Gagner 3000 Limon Noirs pour votre engagement 🤝",
+    "Vous pouvez Invitez vos Amis et Gagner 1000 Limon Noirs pour votre engagement 🤝",
     "Vous pouvez consulter la catégorie : Nous Soutenir pour débloquer toutes les fonctionnalités du Serveur et accéder aux GiveAway Privés 💸",
     "Des GiveAway/Tournoi avec Récompenses , sont organisés tout les 2/3 Jours ☄️", "Merci d'être sur le serveur Tim€ , Nous espérons que vous passerez un bon moment ⌛",
     "Pensez à appuyer sur le Bouton __Invest__ à La Banque  :chart_with_upwards_trend: toutes les **4h** pour récupérer votre investissement.( **3000 Pièces** )",

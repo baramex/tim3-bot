@@ -32,19 +32,21 @@ module.exports = {
                 await api.getOrder(id).then(async invoice => {
                     if (!invoice || !invoice.product) throw new Error("La commande est introuvable, assurez-vous d'avoir bien copié l'id. (ex: `123abc-12345abcde-123abc`)");
 
+                    if (invoice.status !== "COMPLETE") throw new Error("La commande n'est pas encore terminée, veuillez réessayer plus tard.");
+
                     const product = produces.find(a => a.id === invoice.product.uniqid);
                     if (!product) throw new Error("Produit introuvable.");
 
                     const reward = await Reward.getByOrderId(id);
                     if (reward) throw new Error("La commande a déjà été récompensée.");
 
-                    const date = new Date(invoice.product.created_at);
-                    if (new Date().getTime() - date.getTime() > 1000 * 60 * 60 * 24 * 7) throw new Error("La commande est expirée, vous pouvez faire un ticket en cas de problème.");
+                    const date = new Date(invoice.created_at + "000");
+                    if (new Date().getTime() - date.getTime() > 1000 * 60 * 60 * 24 * 14) throw new Error("La commande est expirée, vous pouvez faire un ticket en cas de problème.");
 
                     if (product.type === "money") {
                         await User.addCoins(interaction.user.id, product.value);
 
-                        submit.reply({ content: ":white_check_mark: Vous avez reçu **" + convertMonetary(product.value) + "** sur votre compte !\nMerci pour votre achat ! :blush:", ephemeral: true });
+                        submit.reply({ content: ":white_check_mark: Vous avez reçu **" + convertMonetary(product.value) + "** sur votre compte !\nMerci pour votre soutien ! :blush:", ephemeral: true });
                     }
                     else if (product.type === "grade") {
                         const role = getRole(product.value);
@@ -54,7 +56,7 @@ module.exports = {
 
                         await interaction.member.roles.add(role);
 
-                        submit.reply({ content: ":white_check_mark: Vous avez reçu le grade **" + product.value + "** !\nMerci pour votre achat ! :blush:", ephemeral: true });
+                        submit.reply({ content: ":white_check_mark: Vous avez reçu le grade **" + product.value + "** !\nMerci pour votre soutien ! :blush:", ephemeral: true });
                     }
                     await Reward.create(interaction.user.id, id, product.id);
                 });

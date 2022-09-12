@@ -18,7 +18,6 @@ module.exports.run = async (interaction) => {
     if (!role) return interaction.reply({ content: "Le rôle timelapse n'existe pas !", ephemeral: true });
     if (member.roles.cache.has(role.id)) return interaction.reply({ content: "Le membre a déjà le rôle timelapse !", ephemeral: true });
 
-    // TODO: bonus
     await member.roles.add(role);
     interaction.reply("**" + member.toString() + "** a bien reçu le grade **timelapse**.");
 };

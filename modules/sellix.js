@@ -80,12 +80,14 @@ async function updateSellix() {
         produces[i] = await produces[i];
     }
 
+    const orders = (await api.getAllOrders()).filter(a => a.status === "COMPLETED");
+
     const embed = new EmbedBuilder()
         .setColor(COLORS.info)
         .setTitle("Magasin Sellix")
         .setURL("https://tim3.sellix.io/")
         .setFooter(options.footer)
-        .setDescription("**" + (await api.getAllOrders()).length + "** commandes totalisées !\n\nFaites votre commande puis revenez ici pour recevoir votre récompense !")
+        .setDescription("**" + (orders).length + "** commandes totalisées !\n\nFaites votre commande puis revenez ici pour recevoir votre récompense !")
         .setFields(produces.map(p => ({ name: p.title + " | " + (p.average_score || 0).toFixed(1) + " :star: (" + p.feedback.total + ")", value: p.sold_count + " achats | € " + p.price_display + "", inline: true })));
 
     const row = new ActionRowBuilder()

@@ -24,6 +24,7 @@
     "enmap": "^5.9.0",
     "lowdb": "^1.0.0",
     "mongoose": "^6.5.2",
+    "mongoose-csv-export": "^1.0.0",
     "node-schedule": "^2.1.0"
   }
 }

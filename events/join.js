@@ -15,7 +15,7 @@ module.exports = {
                 const channel = getChannel("invite-tracker");
                 if (channel) channel.send(`<@${inviter}> a invité <@${member.id}> et a gagné **3000** Limon Noir !`);
 
-                await User.addCoins(inviter, 3000);
+                await User.addCoins(inviter, 1000);
             }
             await User.create(member.id);
         }
