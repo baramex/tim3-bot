@@ -42,12 +42,15 @@ async function updateLootboxes() {
 
 function pickupReward(rewards) {
     let reward;
-    rewards.forEach((re, i, l) => {
-        if (reward) return;
+    const random = Math.random();
+    for (const e of rewards) {
+        if (random <= e.proba) {
+            reward = e;
+            break;
+        }
+    }
+    if (!reward) reward = rewards.at(-1);
 
-        if (Math.random() < re.proba) return reward = re;
-        else if (i == l.length - 1) return reward = re;
-    });
     return reward;
 }
 
