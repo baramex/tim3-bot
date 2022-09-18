@@ -38,7 +38,7 @@ module.exports = {
         if (totalVal(croupier.cards) != 21) {
             if (turn == 0) {
                 var desc;
-                bj = [...places.filter(a => a.pseudo && !a.lost && a.cards.length == 2 && totalVal(a.cards) == 21)];
+                bj = [...places.filter(a => a.pseudo && a.cards.length == 2 && totalVal(a.cards, 0) == 21)];
 
                 if (bj.length > 0) desc = `${bj.map(a => "**" + a.pseudo + "** (" + convertMonetary(a.mise) + ")").join(", ")} ${bj.length > 1 ? "ont" : "a"} fait blackjack et ${bj.length > 1 ? "ont" : "a"} remporté ${bj.map(a => "**" + convertMonetary(Math.round(a.mise * 2.5)) + "**").join(", ")} Limon Noir.`;
 
