@@ -88,7 +88,7 @@ async function updateSellix() {
         .setURL("https://tim3.sellix.io/")
         .setFooter(options.footer)
         .setDescription("**" + (orders).length + "** commandes totalisées !\n\nFaites votre commande puis revenez ici pour recevoir votre récompense !")
-        .setFields(produces.map(p => ({ name: p.title + " | " + (p.average_score || 0).toFixed(1) + " :star: (" + p.feedback.total + ")", value: p.sold_count + " achats | € " + p.price_display + "", inline: true })));
+        .setFields(produces.map(p => ({ name: p.title, value: p.sold_count + " achats | " + (p.average_score || 0).toFixed(1) + " :star: (" + p.feedback.total + ")", inline: true })));
 
     const row = new ActionRowBuilder()
         .setComponents(

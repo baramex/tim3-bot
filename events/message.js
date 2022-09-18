@@ -15,6 +15,6 @@ module.exports = {
                 `:clap: Vous prenez le temps d'obtenir **${levelup.passed}** niveaux supérieurs: **${levelup.lvl}** et vous obtenez **${convertMonetary(levelup.reward)}** Limon Noir :hourglass_flowing_sand: !`);
         }
 
-        await User.addCoins(message.author.id, 50);
+        await User.addCoins(message.author.id, 500);
     }
 }

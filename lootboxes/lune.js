@@ -8,9 +8,18 @@ module.exports = {
     image: "./ressources/images/lune.png",
     rewards: [
         {
+            name: "10€ Paypal",
+            image: "https://www.promo-parrain.com/membres/includes/uploads-img/800-718823053607c849b98ba59.65978129Logo-PayPal.png",
+            proba: 0.02,
+            run: async (member, interaction) => {
+                const cha = await createReport(member, "10€ Paypal", interaction, true);
+                await cha.send({ content: ":medal: Reçu dans une lootbox :white_check_mark:" });
+            }
+        },
+        {
             name: "un Grade Timeless",
             image: "https://images-ext-1.discordapp.net/external/vaHQfFeRtHct2a9WdsgnyxqC4mbWMULOX6ulv9LJIDU/https/cdn-0.emojis.wiki/emoji-pics/microsoft/hourglass-done-microsoft.png",
-            proba: 0.05,
+            proba: 0.13,
             run: (member) => {
                 let role = getRole("grade-timeless");
                 if (!role) return;
@@ -19,29 +28,20 @@ module.exports = {
             }
         },
         {
-            name: "Netflix 1 Mois",
-            image: "https://cdn.futura-sciences.com/buildsv6/images/wide1920/0/3/0/030dc01da7_50145928_netflix-logo.jpg",
-            proba: 0.20,
-            run: async (member, interaction) => {
-                const cha = await createReport(member, "Achat Netflix 1 Mois", interaction, true);
-                await cha.send({ content: ":medal: Reçu dans une lootbox :white_check_mark:" });
-            }
-        },
-        {
             name: "Deezer 1 Mois",
             image: "https://www.journaldugeek.com/content/uploads/2021/12/deezer.jpg",
-            proba: 0.25,
+            proba: 0.40,
             run: async (member, interaction) => {
-                const cha = await createReport(member, "Achat Deezer 1 Mois", interaction, true);
+                const cha = await createReport(member, "Deezer 1 Mois", interaction, true);
                 await cha.send({ content: ":medal: Reçu dans une lootbox :white_check_mark:" });
             }
         },
         {
-            name: "Adn 1 Mois",
-            image: "https://upload.wikimedia.org/wikipedia/commons/c/c7/ADN_Logo_2016.png",
-            proba: 0.5,
+            name: "Clé Steam Aléatoire Legendary",
+            image: "https://encrypted-tbn0.gstatic.com/shopping?q=tbn:ANd9GcRbMYrtsOE6tRIsVL3D0GnUHo5F2Pn8MkTucN-6GrCoWePNi-OANP-1i8dRWllfuyIDGrxvzJtB7iJu4pTlXkZXeY3YnKITkWsdiWO_qLvm&usqp=CAE",
+            proba: 0.45,
             run: async (member, interaction) => {
-                const cha = await createReport(member, "Achat Adn 1 Mois", interaction, true);
+                const cha = await createReport(member, "Clé Steam Aléatoire Legendary", interaction, true);
                 await cha.send({ content: ":medal: Reçu dans une lootbox :white_check_mark:" });
             }
         },

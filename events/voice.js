@@ -41,13 +41,13 @@ async function endVoice(member, channel) {
 
         const duration = new Date().getTime() - v.time;
 
-        const levelup = await User.addExp(member, Math.floor(duration / 1000 / 60 / 60 * 1000));
+        const levelup = await User.addExp(member, Math.floor(duration / 1000 / 60 * 100));
         if (levelup) {
             message.reply(levelup.passed == 1 ?
                 `<@${id}>, :clap: Vous prenez le temps d'obtenir un niveau supérieur: **${levelup.lvl}** et vous obtenez **${convertMonetary(levelup.reward)}** Limon Noir :hourglass_flowing_sand: !` :
                 `<@${id}>, :clap: Vous prenez le temps d'obtenir **${levelup.passed}** niveaux supérieurs: **${levelup.lvl}** et vous obtenez **${convertMonetary(levelup.reward)}** Limon Noir :hourglass_flowing_sand: !`);
         }
 
-        await User.addCoins(id, Math.floor(duration / 1000 / 60 * 100));
+        await User.addCoins(id, Math.floor(duration / 1000 / 60 * 1000));
     }
 }
