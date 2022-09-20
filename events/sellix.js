@@ -40,7 +40,7 @@ module.exports = {
                     const reward = await Reward.getByOrderId(id);
                     if (reward) throw new Error("La commande a déjà été récompensée.");
 
-                    const date = new Date(invoice.created_at + "000");
+                    const date = new Date(invoice.created_at * 1000);
                     if (new Date().getTime() - date.getTime() > 1000 * 60 * 60 * 24 * 14) throw new Error("La commande est expirée, vous pouvez faire un ticket en cas de problème.");
 
                     if (product.type === "money") {
