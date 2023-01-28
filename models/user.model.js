@@ -11,30 +11,30 @@ const userSchema = new Schema({
     date: { type: Date, default: new Date() }
 });
 
-const rewards = [1_000_000, 2_000_000, 3_000_000, 4_000_000, 5_000_000, 75_000_000, 100_000_000, 200_000_000, 400_000_000, 500_000_000];
+const rewards = [100_000, 200_000, 300_000, 400_000, 500_000, 750_000, 1_000_000, 5_000_000, 10_000_000, 25_000_000];
 
 userSchema.pre("save", async function (next) {
-    var doc = await UserModel.findOne({ id: this.id }).catch(console.error);
+    const doc = await UserModel.findOne({ id: this.id }).catch(console.error);
     if (!doc) return next();
 
     if (doc.exp != this.exp) {
         doc.exp = this.exp;
-        var lvl = doc.lvl;
-        var exp = doc.exp;
+        const lvl = doc.lvl;
+        const exp = doc.exp;
 
-        var newLvl = User.getLevelFromExp(exp, lvl);
+        const newLvl = User.getLevelFromExp(exp);
 
-        if (newLvl <= 0) return next("Niveau négatif");
+        if (newLvl.level <= 0) return next("Niveau négatif");
 
-        if (newLvl > 1000) {
-            this.exp = User.getMaxExp() - 1;
+        if (newLvl.level > 100) {
+            this.exp = User.getMaxExpFromLevel(newLvl) - 1;
             return next();
         }
 
-        if (newLvl != lvl) {
+        if (newLvl.level != lvl) {
             // level up
-            this.exp = User.getExp(exp);
-            this.lvl = newLvl;
+            this.exp = newLvl.exp;
+            this.lvl = newLvl.level;
             this.coins += User.getReward(lvl, newLvl);
         }
     }
@@ -54,33 +54,31 @@ class User {
         return user.save();
     }
 
-    static getMaxExp() {
-        return 1000;
-    }
-
     /**
      * 
      * @param {Number} exp
      * @returns 
      */
-    static getExp(exp) {
-        return exp % 1000;
+    static getLevelFromExp(exp, level) {
+        while (exp >= User.getMaxExpFromLevel(level)) {
+            exp -= User.getMaxExpFromLevel(level);
+            level++;
+        }
+        return { level, exp };
     }
 
-    /**
-     * 
-     * @param {Number} exp 
-     * @param {Number} level 
-     * @returns 
-     */
-    static getLevelFromExp(exp, level) {
-        return Math.floor(exp / 1000) + level;
+    static getMaxExpFromLevel(level) {
+        return 1000 * 1.0576 ** level - 40;
+    }
+
+    static getTotalExp(level, exp) {
+        new Array(level).fill(0).map((_, i) => getMaxExpFromLevel(i + 1)).reduce((a, b) => a + b, 0) + exp;
     }
 
     static getReward(oldLevel, newLevel) {
         let r = 0;
         for (let i = oldLevel + 1; i <= newLevel; i++) {
-            r += i % 10 == 0 ? i % 100 == 0 ? rewards[i / 100 - 1] : 10000 : 1000;
+            r += i % 10 == 0 ? rewards[i / 10 - 1] : 1000;
         }
         return r;
     }
