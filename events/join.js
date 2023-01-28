@@ -16,6 +16,7 @@ module.exports = {
                 if (channel) channel.send(`<@${inviter}> a invité <@${member.id}> et a gagné **10'000** Limon Noir !`);
 
                 await User.addCoins(inviter, 10000);
+                await User.addInvite(inviter);
             }
             await User.create(member.id);
         }

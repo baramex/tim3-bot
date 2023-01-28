@@ -8,10 +8,15 @@ const userSchema = new Schema({
     lvl: { type: Number, default: 1, min: 1 },
     exp: { type: Number, default: 0, min: 0 },
     coins: { type: Number, default: 1000, min: 0 },
+    invites: { type: Number, default: 0, min: 0 },
     date: { type: Date, default: new Date() }
 });
 
-const rewards = [100_000, 200_000, 300_000, 400_000, 500_000, 750_000, 1_000_000, 5_000_000, 10_000_000, 25_000_000];
+const levelRewards = [100_000, 200_000, 300_000, 400_000, 500_000, 750_000, 1_000_000, 5_000_000, 10_000_000, 25_000_000];
+const levelRoles = ["1017481276619489370", "1017481452016902246", "1017481768628129842", "1017481832222167100", "1017481921237897336", "1017482001734959246", "1017482064653713509", "1017482127379533875", "1017482190025658539", "1017482288809902180"];
+
+const invitRewards = [100_000, 200_000, 300_000, 400_000, 500_000, 750_000, 1_000_000];
+const invitRoles = ["1017467416181219338", "1017468062137581608", "1017468802050564097", "1017468975602479124", "1017469105869160479", "1017469293471989760", "1017469459306397777"];
 
 userSchema.pre("save", async function (next) {
     const doc = await UserModel.findOne({ id: this.id }).catch(console.error);
@@ -36,6 +41,26 @@ userSchema.pre("save", async function (next) {
             this.exp = newLvl.exp;
             this.lvl = newLvl.level;
             this.coins += User.getReward(lvl, newLvl);
+
+            // palier up
+            const member = options.guild.members.cache.get(this.id);
+            if (member && newLvl % 10 === 0) {
+                const role = options.guild.roles.cache.get(levelRoles[newLvl / 10 - 1]);
+                if (role) {
+                    member.roles.add(role);
+                }
+            }
+        }
+    }
+    if (doc.invites != this.invites) {
+        const member = options.guild.members.cache.get(this.id);
+        if (member && this.invites % 10 === 0) {
+            const role = options.guild.roles.cache.get(invitRoles[this.invites / 10 - 1]);
+            if (role) {
+                member.roles.add(role);
+            }
+            const reward = invitRewards[this.invites / 10 - 1];
+            this.coins += reward;
         }
     }
 
@@ -52,6 +77,10 @@ class User {
     static create(id) {
         var user = new UserModel({ id });
         return user.save();
+    }
+
+    static addInvite(id) {
+        return UserModel.updateOne({ id }, { $inc: { invites: 1 } });
     }
 
     /**
@@ -72,13 +101,13 @@ class User {
     }
 
     static getTotalExp(level, exp) {
-        new Array(level).fill(0).map((_, i) => getMaxExpFromLevel(i + 1)).reduce((a, b) => a + b, 0) + exp;
+        new Array(level).fill(0).map((_, i) => User.getMaxExpFromLevel(i + 1)).reduce((a, b) => a + b, 0) + exp;
     }
 
     static getReward(oldLevel, newLevel) {
         let r = 0;
         for (let i = oldLevel + 1; i <= newLevel; i++) {
-            r += i % 10 == 0 ? rewards[i / 10 - 1] : 1000;
+            r += i % 10 == 0 ? levelRewards[i / 10 - 1] : 1000;
         }
         return r;
     }
@@ -119,15 +148,11 @@ class User {
         }, 0);
     }
 
-    static getTotalExpFromLvl(lvl) {
-        return (lvl - 1) * User.getMaxExp();
-    }
-
     static async totalExp() {
         const users = await UserModel.find({}, { lvl: 1, exp: 1 });
 
         return users.reduce((acc, user) => {
-            return acc + user.exp + User.getTotalExpFromLvl(user.lvl);
+            return acc + User.getTotalExp(user.lvl, user.exp);
         }, 0);
     }
 
@@ -149,6 +174,12 @@ class User {
 
     static getLevel(id) {
         return UserModel.findOne({ id }, { lvl: 1, exp: 1 });
+    }
+
+    static async getRank(id) {
+        const users = await UserModel.find({}, { id: 1, lvl: 1, exp: 1 }, { sort: { lvl: -1, exp: -1 } });
+
+        return users.filter(({ id: i }) => options.guild.members.cache.has(i)).findIndex(a => a.id == id) + 1;
     }
 
     static exists(id) {

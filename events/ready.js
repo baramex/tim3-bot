@@ -45,6 +45,6 @@ module.exports = {
         invites.push(...(await guild.invites.fetch()).map(a => ({ id: a.inviter.id, uses: a.uses || 0, code: a.code })));
 
         await fastUpdate();
-        await update();
+        update();
     }
 }

@@ -183,9 +183,9 @@ module.exports = {
                 if (!work) work = works[works.push({ id: interaction.member.id, end: Date.now() + 4 * 60 * 60 * 1000 }) - 1];
                 work.end = Date.now() + (4 * 60 * 60 * 1000);
 
-                User.addCoins(interaction.member.id, 30000);
+                User.addCoins(interaction.member.id, 90_000);
 
-                await interaction.reply({ ephemeral: true, content: "Vous avez récupéré **30'000** Limon Noir, revenez dans **4 heures** pour récupérer vos nouveaux gains." });
+                await interaction.reply({ ephemeral: true, content: "Vous avez récupéré **90'000** Limon Noir, revenez dans **4 heures** pour récupérer vos nouveaux gains." });
             }
             else {
                 await interaction.reply({ ephemeral: true, content: "Vous devez encore attendre **" + durationTime(work.end - Date.now()) + "**" });

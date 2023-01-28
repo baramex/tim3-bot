@@ -3,7 +3,7 @@ const { createReport } = require("../modules/ticket");
 
 module.exports = {
     name: "Loot Box Soleil",
-    price: 100_000_000,
+    price: 50_000_000,
     image: "./ressources/images/soleil.png",
     rewards: [
         {

@@ -4,7 +4,7 @@ const { getRole } = require("../service/config");
 
 module.exports = {
     name: "Loot Box Maître du Temps",
-    price: 500_000_000,
+    price: 100_000_000,
     image: "./ressources/images/maitre-du-tps.png",
     rewards: [
         {

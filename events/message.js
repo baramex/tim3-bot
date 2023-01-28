@@ -7,7 +7,7 @@ module.exports = {
     run: async function (message) {
         if (message.author.bot || ![MessageType.Default, MessageType.Reply].includes(message.type)) return;
 
-        const levelup = await User.addExp(message.member, 50);
+        const levelup = await User.addExp(message.member, 100);
 
         if (levelup) {
             message.reply(levelup.passed == 1 ?
@@ -15,6 +15,6 @@ module.exports = {
                 `:clap: Vous prenez le temps d'obtenir **${levelup.passed}** niveaux supérieurs: **${levelup.lvl}** et vous obtenez **${convertMonetary(levelup.reward)}** Limon Noir :hourglass_flowing_sand: !`);
         }
 
-        await User.addCoins(message.author.id, 500);
+        await User.addCoins(message.author.id, 1000);
     }
 }
