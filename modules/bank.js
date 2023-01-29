@@ -28,12 +28,12 @@ async function updateBank() {
     const messages = (await channel.messages.fetch({ limit: 5 })).filter(m => m.author.id == client.user.id);
 
     const secondMessage = messages.at(1);
-    if (secondMessage) secondMessage.edit({ files: [attachment], components: [row], embeds: [] });
-    else await channel.send({ files: [attachment], components: [row], embeds: [] });
+    if (secondMessage) secondMessage.edit({ embeds: [embed], files: [], components: [] });
+    else await channel.send({ embeds: [embed], files: [], components: [] });
 
     const firstMessage = messages.at(0);
-    if (firstMessage) firstMessage.edit({ embeds: [embed], files: [], components: [] });
-    else await channel.send({ embeds: [embed], files: [], components: [] });
+    if (firstMessage) firstMessage.edit({ files: [attachment], components: [row], embeds: [] });
+    else await channel.send({ files: [attachment], components: [row], embeds: [] });
 }
 
 module.exports = { updateBank };

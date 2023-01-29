@@ -27,7 +27,7 @@ userSchema.pre("save", async function (next) {
         const lvl = doc.lvl;
         const exp = doc.exp;
 
-        const newLvl = User.getLevelFromExp(exp);
+        const newLvl = User.getLevelFromExp(exp, lvl);
 
         if (newLvl.level <= 0) return next("Niveau négatif");
 
@@ -38,7 +38,7 @@ userSchema.pre("save", async function (next) {
 
         if (newLvl.level != lvl) {
             // level up
-            this.exp = newLvl.exp;
+            this.exp = Math.round(newLvl.exp);
             this.lvl = newLvl.level;
             this.coins += User.getReward(lvl, newLvl);
 
@@ -88,7 +88,7 @@ class User {
      * @param {Number} exp
      * @returns 
      */
-    static getLevelFromExp(exp, level) {
+    static getLevelFromExp(exp, level = 1) {
         while (exp >= User.getMaxExpFromLevel(level)) {
             exp -= User.getMaxExpFromLevel(level);
             level++;
@@ -97,7 +97,7 @@ class User {
     }
 
     static getMaxExpFromLevel(level) {
-        return 1000 * 1.0576 ** level - 40;
+        return Math.round(1000 * 1.0576 ** level - 40);
     }
 
     static getTotalExp(level, exp) {
@@ -133,6 +133,7 @@ class User {
         }
         let level = user.lvl;
         user.exp += exp;
+        user.exp = Math.round(user.exp);
         user = await user.save();
 
         return level != user.lvl ? { lvl: user.lvl, passed: user.lvl - level, reward: User.getReward(level, user.lvl) } : false;
