@@ -18,7 +18,7 @@ async function updateLevel() {
 
     const row = new ActionRowBuilder()
         .setComponents(
-            new ButtonBuilder().setCustomId("level").setEmoji("💧").setLabel("Niveau").setStyle(ButtonStyle.Secondary),
+            new ButtonBuilder().setCustomId("level").setEmoji("📜").setLabel("Niveau").setStyle(ButtonStyle.Secondary),
         )
 
     const message = (await channel.messages.fetch({ limit: 5 })).find(m => m.author.id == client.user.id);
