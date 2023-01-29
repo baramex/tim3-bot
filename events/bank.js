@@ -14,7 +14,7 @@ const items = [
         icon: "https://cdn-icons-png.flaticon.com/512/567/567491.png",
         name: "Accès Candidature Poste Staff :card_box:",
         type: "Divers",
-        price: 500_000,
+        price: 5_000_000,
         description: "Le dossier staff permet de proposer sa candidature et d'avoir une chance d'intégrer l'équipe de modération du serveur TIM€.",
         available: async (member) => {
             return true;
@@ -28,7 +28,7 @@ const items = [
         icon: "https://www.e-monsite.com/medias/images/newsletter-02-1-.png",
         name: "Grade Perso Couleur :blue_circle:",
         type: "Role",
-        price: 750_000,
+        price: 10_000_000,
         description: "Le rôle personnalisé vous permet de changer la couleur de votre pseudo pour visuellement vous identifier.",
         available: async (member) => {
             if (!getRole("membre")) return false;
