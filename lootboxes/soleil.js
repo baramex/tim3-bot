@@ -7,20 +7,20 @@ module.exports = {
     image: "./ressources/images/soleil.png",
     rewards: [
         {
-            name: "3€ Paypal",
+            name: "9€ Paypal",
             image: "https://www.promo-parrain.com/membres/includes/uploads-img/800-718823053607c849b98ba59.65978129Logo-PayPal.png",
             proba: 0.05,
             run: async (member, interaction) => {
-                const cha = await createReport(member, "3€ Paypal", interaction, true);
+                const cha = await createReport(member, "9€ Paypal", interaction, true);
                 await cha.send({ content: ":medal: Reçu dans une lootbox :white_check_mark:" });
             }
         },
         {
-            name: "1.5€ Paypal",
+            name: "3€ Paypal",
             image: "https://www.promo-parrain.com/membres/includes/uploads-img/800-718823053607c849b98ba59.65978129Logo-PayPal.png",
             proba: 0.15,
             run: async (member, interaction) => {
-                const cha = await createReport(member, "1.5€ Paypal", interaction, true);
+                const cha = await createReport(member, "3€ Paypal", interaction, true);
                 await cha.send({ content: ":medal: Reçu dans une lootbox :white_check_mark:" });
             }
         },
@@ -34,10 +34,10 @@ module.exports = {
             }
         },
         {
-            name: "200 Millions de Limon Noir",
+            name: "41 Millions de Limon Noir",
             image: "https://assets.materialup.com/uploads/27355340-a295-4c0f-88c1-8e45c92adad0/preview.png",
             proba: 0.60,
-            run: (member) => User.addCoins(member.id, 200_000_000)
+            run: (member) => User.addCoins(member.id, 41_000_000)
         },
     ].sort((a, b) => a.proba - b.proba)
 }

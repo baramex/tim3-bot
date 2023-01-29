@@ -123,7 +123,7 @@ class User {
         let bonus = 1;
         const roletle = getRole("grade-timeless");
 
-        if (roletle && member.roles.cache.has(roletle.id)) bonus = 1.25;
+        if (roletle && member.roles.cache.has(roletle.id)) bonus = 1.3;
 
         exp *= bonus;
 

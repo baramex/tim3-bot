@@ -8,42 +8,37 @@ module.exports = {
     image: "./ressources/images/lune.png",
     rewards: [
         {
-            name: "10€ Paypal",
+            name: "15€ Paypal",
             image: "https://www.promo-parrain.com/membres/includes/uploads-img/800-718823053607c849b98ba59.65978129Logo-PayPal.png",
             proba: 0.02,
             run: async (member, interaction) => {
-                const cha = await createReport(member, "10€ Paypal", interaction, true);
+                const cha = await createReport(member, "15€ Paypal", interaction, true);
                 await cha.send({ content: ":medal: Reçu dans une lootbox :white_check_mark:" });
             }
         },
         {
-            name: "un Grade Timeless",
-            image: "https://images-ext-1.discordapp.net/external/vaHQfFeRtHct2a9WdsgnyxqC4mbWMULOX6ulv9LJIDU/https/cdn-0.emojis.wiki/emoji-pics/microsoft/hourglass-done-microsoft.png",
+            name: "11€ Paypal",
+            image: "https://www.promo-parrain.com/membres/includes/uploads-img/800-718823053607c849b98ba59.65978129Logo-PayPal.png",
             proba: 0.13,
-            run: (member) => {
-                let role = getRole("grade-timeless");
-                if (!role) return;
-
-                return member.roles.add(role);
-            }
-        },
-        {
-            name: "Deezer 1 Mois",
-            image: "https://www.journaldugeek.com/content/uploads/2021/12/deezer.jpg",
-            proba: 0.40,
             run: async (member, interaction) => {
-                const cha = await createReport(member, "Deezer 1 Mois", interaction, true);
+                const cha = await createReport(member, "11€ Paypal", interaction, true);
                 await cha.send({ content: ":medal: Reçu dans une lootbox :white_check_mark:" });
             }
         },
         {
             name: "Clé Steam Aléatoire Legendary",
-            image: "https://encrypted-tbn0.gstatic.com/shopping?q=tbn:ANd9GcRbMYrtsOE6tRIsVL3D0GnUHo5F2Pn8MkTucN-6GrCoWePNi-OANP-1i8dRWllfuyIDGrxvzJtB7iJu4pTlXkZXeY3YnKITkWsdiWO_qLvm&usqp=CAE",
-            proba: 0.45,
+            image: "https://encrypted-tbn3.gstatic.com/shopping?q=tbn:ANd9GcTsK9H-p14NcaUN0qPIaTbWYKEZFX2WwI5LfMdt_BDqPkO0rpvE-jxR5l-1bZ1Aikvpez-dBrCxpQUzHMs93VPCbVvJ0p403CrbHpb0TtIpg7Pix0vPSKaJ-Q&usqp=CAE",
+            proba: 0.40,
             run: async (member, interaction) => {
                 const cha = await createReport(member, "Clé Steam Aléatoire Legendary", interaction, true);
                 await cha.send({ content: ":medal: Reçu dans une lootbox :white_check_mark:" });
             }
         },
+        {
+            name: "61 Millions de Limon Noir",
+            image: "https://assets.materialup.com/uploads/27355340-a295-4c0f-88c1-8e45c92adad0/preview.png",
+            proba: 0.45,
+            run: (member) => User.addCoins(member.id, 61_000_000)
+        }
     ].sort((a, b) => a.proba - b.proba)
 }

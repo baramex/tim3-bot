@@ -25,16 +25,16 @@ module.exports = {
             }
         },
         {
-            name: "99 Millions de Limon Noir",
+            name: "21 Millions de Limon Noir",
             image: "https://assets.materialup.com/uploads/bcf6dd06-7117-424f-9a6e-4bb795c8fb4d/preview.png",
             proba: 0.28,
-            run: (member) => User.addCoins(member.id, 99_000_000)
+            run: (member) => User.addCoins(member.id, 21_000_000)
         },
         {
-            name: "49 Millions de Limon Noir",
+            name: "11 Millions de Limon Noir",
             image: "https://assets.materialup.com/uploads/27355340-a295-4c0f-88c1-8e45c92adad0/preview.png",
             proba: 0.50,
-            run: (member) => User.addCoins(member.id, 49_000_000)
+            run: (member) => User.addCoins(member.id, 11_000_000)
         },
     ].sort((a, b) => a.proba - b.proba)
 }
