@@ -101,7 +101,7 @@ class User {
     }
 
     static getTotalExp(level, exp) {
-        new Array(level).fill(0).map((_, i) => User.getMaxExpFromLevel(i + 1)).reduce((a, b) => a + b, 0) + exp;
+        return new Array(level - 1).fill(0).map((_, i) => User.getMaxExpFromLevel(i + 1)).reduce((a, b) => a + b, 0) + exp;
     }
 
     static getReward(oldLevel, newLevel) {
@@ -121,11 +121,9 @@ class User {
     static async addExp(member, exp) {
         const id = member.id;
         let bonus = 1;
-        const roletla = getRole("grade-timelapse");
         const roletle = getRole("grade-timeless");
 
-        if (roletla && member.roles.cache.has(roletla.id)) bonus = 1.1;
-        if (roletle && member.roles.cache.has(roletle.id)) bonus = 1.3;
+        if (roletle && member.roles.cache.has(roletle.id)) bonus = 1.25;
 
         exp *= bonus;
 

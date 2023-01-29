@@ -5,22 +5,22 @@ const { getChannel } = require('../service/config');
 
 const produces = [
     {
-        id: "6307b7f4574a3",
+        id: "6307b9b1e580a",
         type: "money",
-        value: 1_000_000_000,
-    },
-    {
-        id: "6307b9ad45ebb",
-        type: "money",
-        value: 500_000_000,
+        value: 10_000_000,
     },
     {
         id: "6307b9b0008af",
         type: "money",
-        value: 250_000_000,
+        value: 25_000_000,
     },
     {
-        id: "6307b9b1e580a",
+        id: "6307b9ad45ebb",
+        type: "money",
+        value: 50_000_000,
+    },
+    {
+        id: "6307b7f4574a3",
         type: "money",
         value: 100_000_000,
     },
@@ -28,11 +28,6 @@ const produces = [
         id: "62fe889099f61",
         type: "grade",
         value: "grade-timeless",
-    },
-    {
-        id: "62fe866f1dc90",
-        type: "grade",
-        value: "grade-timelapse",
     }
 ];
 const regexId = /^[0-9a-z]{6}-[0-9a-z]{10}-[0-9a-z]{6}$/;

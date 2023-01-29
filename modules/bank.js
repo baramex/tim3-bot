@@ -1,6 +1,6 @@
 const { client, COLORS, options } = require("../client");
 const { getChannel } = require("../service/config");
-const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require("discord.js");
+const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, AttachmentBuilder } = require("discord.js");
 const User = require("../models/user.model");
 const { convertMonetary } = require("../service/utils");
 
@@ -20,13 +20,20 @@ async function updateBank() {
     const row = new ActionRowBuilder()
         .setComponents(
             new ButtonBuilder().setCustomId("bankrole").setEmoji("💰").setLabel("Solde").setStyle(ButtonStyle.Success),
-            new ButtonBuilder().setCustomId("work").setEmoji("📈").setLabel("Invest").setStyle(ButtonStyle.Primary),
-            new ButtonBuilder().setCustomId("shop").setEmoji("🛒").setLabel("Magasin").setStyle(ButtonStyle.Secondary)
-        )
+            new ButtonBuilder().setCustomId("work").setEmoji("📈").setLabel("Invest").setStyle(ButtonStyle.Primary)
+        );
 
-    const message = (await channel.messages.fetch({ limit: 5 })).find(m => m.author.id == client.user.id);
-    if (message) message.edit({ embeds: [embed], components: [row] });
-    else channel.send({ embeds: [embed], components: [row] });
+    const attachment = new AttachmentBuilder().setFile("./ressources/images/bank.gif").setName("bank.gif");
+
+    const messages = (await channel.messages.fetch({ limit: 5 })).filter(m => m.author.id == client.user.id);
+
+    const secondMessage = messages.at(1);
+    if (secondMessage) secondMessage.edit({ files: [attachment], components: [row], embeds: [] });
+    else await channel.send({ files: [attachment], components: [row], embeds: [] });
+
+    const firstMessage = messages.at(0);
+    if (firstMessage) firstMessage.edit({ embeds: [embed], files: [], components: [] });
+    else await channel.send({ embeds: [embed], files: [], components: [] });
 }
 
 module.exports = { updateBank };

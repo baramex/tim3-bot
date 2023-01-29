@@ -185,15 +185,15 @@ function addCooldown(id, name, time) {
 }
 
 function getMinBet(member) {
-    return member.roles.cache.has(getRole("grade-timelapse")?.id) ? 500 : member.roles.cache.has(getRole("grade-timeless")?.id) ? 0 : 1000;
+    return member.roles.cache.has(getRole("grade-timeless")?.id) ? 0 : 500;
 }
 
 function getMaxBet(member) {
-    return member.roles.cache.has(getRole("grade-timelapse")?.id) ? 5_000_000 : member.roles.cache.has(getRole("grade-timeless")?.id) ? 10_000_000 : 1_000_000;
+    return member.roles.cache.has(getRole("grade-timeless")?.id) ? 1_000_000 : 250_000;
 }
 
 function getCooldown(member) {
-    return member.roles.cache.has(getRole("grade-timelapse")?.id) ? 1 : member.roles.cache.has(getRole("grade-timeless")?.id) ? 0 : 2;
+    return member.roles.cache.has(getRole("grade-timeless")?.id) ? 0 : 2;
 }
 
 function isCooldowned(id, name) {

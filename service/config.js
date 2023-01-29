@@ -10,6 +10,7 @@ config.defaults({
         { event: "invite-tracker", description: "Salon où seront affichés les récompenses des invitations.", types: [ChannelType.GuildText] },
         { event: "sellix", description: "Salon du shop sellix.", types: [ChannelType.GuildText] },
         { event: "banque", description: "Salon de la banque.", types: [ChannelType.GuildText] },
+        { event: "shop", description: "Salon du shop.", types: [ChannelType.GuildText] },
         { event: "niveau", description: "Salon du niveau/exp.", types: [ChannelType.GuildText] },
         { event: "casino", description: "Salon du casino", types: [ChannelType.GuildText] },
         { event: "lootboxes", description: "Salon des loot boxes", types: [ChannelType.GuildText] },
@@ -20,7 +21,6 @@ config.defaults({
     ], roles: [
         { type: "membre", description: "Rôle membre." },
         { type: "supporter", description: "Rôle supporter." },
-        { type: "grade-timelapse", description: "Grade TimeLapse." },
         { type: "grade-timeless", description: "Grade TimeLess." },
     ],
     tickets: []

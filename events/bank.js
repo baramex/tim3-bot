@@ -14,21 +14,21 @@ const items = [
         icon: "https://cdn-icons-png.flaticon.com/512/567/567491.png",
         name: "Accès Candidature Poste Staff :card_box:",
         type: "Divers",
-        price: 25_000_000,
+        price: 500_000,
         description: "Le dossier staff permet de proposer sa candidature et d'avoir une chance d'intégrer l'équipe de modération du serveur TIM€.",
         available: async (member) => {
             return true;
         },
         reward: async (member, interaction) => {
             const cha = await createReport(member, "Candidature Poste Staff", interaction, true);
-            return () => cha.send({ content: ":medal: Achat à **__25'000'000__** Limon Noir confirmé :white_check_mark:" });
+            return () => cha.send({ content: ":medal: Achat à **__2'500'000__** Limon Noir confirmé :white_check_mark:" });
         }
     },
     {
         icon: "https://www.e-monsite.com/medias/images/newsletter-02-1-.png",
         name: "Grade Perso Couleur :blue_circle:",
         type: "Role",
-        price: 50_000_000,
+        price: 750_000,
         description: "Le rôle personnalisé vous permet de changer la couleur de votre pseudo pour visuellement vous identifier.",
         available: async (member) => {
             if (!getRole("membre")) return false;
@@ -82,43 +82,22 @@ const items = [
         icon: "https://www.digiseller.ru/preview/853328/p1_3242803_c21cab0b.jpeg",
         name: "Nitro Classic 1 Mois OU 5€",
         type: "Divers",
-        price: 250_000_000,
+        price: 25_000_000,
         description: "Rien à dire de plus, un nitro classic d'une durée de 1 mois offert, si vous préférez le :money_with_wings: cash, il y a toujours les 5€.",
         available: async () => {
             return true;
         },
         reward: async (member, interaction) => {
             const cha = await createReport(member, "Achat Nitro Classic 1 Mois OU 5€", interaction, true);
-            return () => cha.send({ content: ":medal: Achat à **__250'000'000__** Limon Noir confirmé :white_check_mark:" });
-        }
-    },
-    {
-        icon: "https://images-ext-2.discordapp.net/external/4NMWSyMkPSXdNjgoWvfW9gNldf3txTalLSV7X77BAv8/https/les-raccourcis-clavier.fr/wp-content/uploads/2019/03/Emoji-foudre.png",
-        name: "Grade TimeLapse",
-        type: "Role",
-        price: 500_000_000,
-        description: "Le grade TimeLapse vous est offert (voir salon nous-soutenir), sa valeur de base est 10€.",
-        available: async (member) => {
-            let role = getRole("grade-timelapse");
-            if (!role) return false;
-            if (member.roles.cache.has(role.id)) return false;
-
-            return true;
-        },
-        reward: async (member) => {
-            let role = getRole("grade-timelapse");
-            if (!role) throw new Error();
-
-            await member.roles.add(role);
-            return () => { };
+            return () => cha.send({ content: ":medal: Achat à **__25'000'000__** Limon Noir confirmé :white_check_mark:" });
         }
     },
     {
         icon: "https://images-ext-1.discordapp.net/external/vaHQfFeRtHct2a9WdsgnyxqC4mbWMULOX6ulv9LJIDU/https/cdn-0.emojis.wiki/emoji-pics/microsoft/hourglass-done-microsoft.png",
         name: "Grade TimeLess",
         type: "Role",
-        price: 1_000_000_000,
-        description: "Le grade TimeLess vous est offert (voir salon nous-soutenir), sa valeur de base est 20€.",
+        price: 50_000_000,
+        description: "Le grade TimeLess vous est offert (voir salon nous-soutenir), sa valeur de base est 10€.",
         available: async (member) => {
             let role = getRole("grade-timeless");
             if (!role) return false;

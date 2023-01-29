@@ -5,6 +5,7 @@ const { updateCasino } = require("../modules/casino");
 const { updateLevel } = require("../modules/level");
 const { updateLootboxes } = require("../modules/lootbox");
 const { updateSellix } = require("../modules/sellix");
+const { updateShop } = require("../modules/shop");
 const { updateSupport } = require("../modules/support");
 const { updateTicket } = require("../modules/ticket");
 const { config } = require("./config");
@@ -24,6 +25,7 @@ async function fastUpdate() {
         updateLootboxes().catch(console.error);
         updateSupport().catch(console.error);
         updateSellix().catch(console.error);
+        updateShop().catch(console.error);
     } catch (error) {
         console.error(error);
     }
