@@ -5,8 +5,9 @@ const { fastUpdate, update } = require("./update");
 const messages = [
     "Vous pouvez Invitez vos Amis et Gagner 10'000 Limon Noirs pour votre engagement 🤝",
     "Vous pouvez consulter la catégorie : Nous Soutenir pour débloquer toutes les fonctionnalités du Serveur et accéder aux GiveAway Privés 💸",
-    "Des GiveAway/Tournoi avec Récompenses , sont organisés tous les Jours ☄️", "Merci d'être sur le serveur Tim€ , Nous espérons que vous passerez un bon moment ⌛",
-    "Pensez à appuyer sur le Bouton __Invest__ à La Banque  :chart_with_upwards_trend: toutes les **4h** pour récupérer votre investissement.( **30'000 Pièces** )",
+    "Des GiveAway/Tournoi avec Récompenses , sont organisés tous les Jours ☄️",
+    "Merci d'être sur le serveur Tim€ , Nous espérons que vous passerez un bon moment ⌛",
+    "Pensez à appuyer sur le Bouton __Invest__ à La Banque  :chart_with_upwards_trend: toutes les **4h** pour récupérer votre investissement.( **90'000 Pièces** )",
     "Pour gagner des pièces , vous pouvez : **Envoyer des messages :incoming_envelope:** / **Rejoindre un Vocal :loud_sound: **/ **Inviter un Ami :heavy_plus_sign:1**",
     "Vous gagnez des **Limons Noir** :coin: à chaque **Niveaux** que vous passez :thunder_cloud_rain: !"
 ];
