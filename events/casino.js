@@ -193,7 +193,7 @@ function getMaxBet(member) {
 }
 
 function getCooldown(member) {
-    return member.roles.cache.has(getRole("grade-timeless")?.id) ? 0 : 2;
+    return member.roles.cache.has(getRole("grade-timeless")?.id) ? 0 : 1;
 }
 
 function isCooldowned(id, name) {
